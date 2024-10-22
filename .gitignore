@@ -1,2 +1,13 @@
+# Python related
+__pycache__
+
+# CSV Files
 /csv/en.openfoodfacts.org.products.csv
+/app/static/en.openfoodfacts.org.products.csv
 /db/nutriscore.db
+
+# Databases
+/instance/
+
+# Environments
+.venv
