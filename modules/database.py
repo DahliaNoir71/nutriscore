@@ -28,3 +28,5 @@ def create_db_from_csv():
 def set_database():
     if not os.path.isfile(DB_FULL_PATH):
         create_db_from_csv()
+    else:
+        print("Base de données " + DB_NAME + "déjà créée")
