@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Nutriscore Prediction Form{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Nutriscore<br>Predict using AI</h1>
+        <form method="POST" action="{{ url_for('main.predict') }}">
+            <!-- Form fields for the relevant nutritional data -->
+            <div class="form-group">
+                <label for="product_name">Product Name</label><br>
+                <input type="text" id="product_name" name="product_name" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="energy">Energy (kJ)</label><br>
+                <input type="number" id="energy" name="energy" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="fat">Fat (g)</label><br>
+                <input type="number" id="fat" name="fat" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="saturated_fat">Saturated Fat (g)</label><br>
+                <input type="number" id="saturated_fat" name="saturated_fat" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="sugar">Sugar (g)</label><br>
+                <input type="number" id="sugar" name="sugar" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="salt">Salt (g)</label><br>
+                <input type="number" id="salt" name="salt" class="form-control" required>
+            </div>
+
+            <!-- Predict button -->
+            <button type="submit" style="background-color: #4CAF50; color: white; border: none; padding: 10px 20px; font-size: 16px; margin-top: 20px; cursor: pointer; border-radius: 5px;">Predict</button>
+        </form>
+    </div>
+{% endblock %}
