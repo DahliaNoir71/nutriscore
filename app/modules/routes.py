@@ -6,6 +6,11 @@ main = Blueprint('main', __name__)
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
+    """
+    Handles the main route of the application, processing both GET and POST requests to predict Nutri-Score for a given product.
+
+    :return: Renders the index page with the NutriScoreForm or redirects to the main index page with a flash message upon successful form submission.
+    """
     form = NutriScoreForm()
     if form.validate_on_submit():
         # Here, you would call your trained model to get the Nutri-Score prediction
@@ -32,6 +37,11 @@ def index():
 
 @main.route('/predict', methods=['GET', 'POST'])
 def predict():
+    """
+    Handles HTTP GET and POST requests for predicting nutritional scores.
+
+    :return: Renders the prediction form template with the form object.
+    """
     form = NutriScoreForm()
     if form.validate_on_submit():
         # Handle prediction logic here
@@ -40,5 +50,10 @@ def predict():
 
 @main.route('/browse_data')
 def browse_data():
+    """
+    Route to browse training data.
+
+    :return: A page displaying the training data.
+    """
     # Logic to browse training data
     return "This page will show the training data."
