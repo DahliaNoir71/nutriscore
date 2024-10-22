@@ -1,13 +1,24 @@
 import os
 import pandas as pd
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 
 DB_NAME = "nutriscore.db"
 DB_FULL_PATH = "app/static/" + DB_NAME
 TABLE_NAME = "produits"
-CSV_NAME = "en.openfoodfacts.org.products.csv"
+#CSV_NAME = "en.openfoodfacts.org.products.csv"
+CSV_NAME = "openfoodfact_clean.csv"
 CSV_FULL_PATH = "app/static/" + CSV_NAME
 CHUNK_SIZE = 10000
+VIEW_NAME = 'products_view'
+
+def get_db_engine():
+    """
+    Creates and returns a SQLAlchemy engine connected to an SQLite database
+
+    :return: SQLAlchemy engine connected to the specified SQLite database
+    """
+    engine = create_engine('sqlite:///' + DB_FULL_PATH)
+    return engine
 
 def create_db_from_csv():
     """
@@ -16,7 +27,7 @@ def create_db_from_csv():
     :return: None
     """
     # Crée une connexion à la base de données SQLite
-    engine = create_engine('sqlite:///' + DB_FULL_PATH)
+    engine = get_db_engine()
     # Insertion du CSV par lots
     count = 1
     for chunk in pd.read_csv(CSV_FULL_PATH,
