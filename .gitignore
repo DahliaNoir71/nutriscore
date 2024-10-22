@@ -2,7 +2,6 @@
 __pycache__
 
 # CSV Files
-/csv/en.openfoodfacts.org.products.csv
 /app/static/en.openfoodfacts.org.products.csv
 
 # Databases
@@ -10,3 +9,4 @@ __pycache__
 
 # Environments
 .venv
+/app/static/nutriscore.db
