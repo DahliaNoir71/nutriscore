@@ -2,6 +2,12 @@ import pandas as pd
 from config import Config
 
 def read_csv_chunks(file_path, selected_columns, chunk_size):
+    """
+    :param file_path: The path to the CSV file to be read.
+    :param selected_columns: A list of columns to be selected from each chunk of the CSV file.
+    :param chunk_size: The number of rows per chunk to be read from the CSV file.
+    :return: A list of pandas DataFrame chunks, each containing only the selected columns.
+    """
     print("\nLecture du fichier CSV par chunks")
     chunks = pd.read_csv(file_path,
                          sep="\t",
@@ -13,6 +19,13 @@ def read_csv_chunks(file_path, selected_columns, chunk_size):
     return selected_chunks
 
 def filter_and_clean_data(dataframes, selected_columns, cols_stat, nutri_ok):
+    """
+    :param dataframes: List of pandas DataFrame objects to be filtered and cleaned.
+    :param selected_columns: List of column names to retain in the DataFrame after filtering.
+    :param cols_stat: List of column names where missing values should be filled with 0.
+    :param nutri_ok: List of acceptable 'nutriscore_grade' values to retain in the filtered DataFrame.
+    :return: Concatenated and cleaned DataFrame comprising only the specified columns and filtered by acceptable 'nutriscore_grade' values.
+    """
     print("\nFiltrage et nettoyage des datas")
     list_df_not_na = [
         df[df[['nutriscore_score', 'nutriscore_grade']].notna().all(axis=1)][selected_columns]
@@ -24,6 +37,11 @@ def filter_and_clean_data(dataframes, selected_columns, cols_stat, nutri_ok):
     return df_not_na
 
 def clean_csv():
+    """
+    This function cleans a CSV file by reading it in chunks, filtering and cleaning the data according to specified configurations, and then outputting the cleaned data to a new CSV file.
+
+    :return: None
+    """
     print("\nDébut de script clean_csv")
     file_path = Config.DIRECTORY_PATH + Config.FILE_NAME
     chunks = read_csv_chunks(file_path,
