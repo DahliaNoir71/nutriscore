@@ -75,8 +75,6 @@ class Config:
         "proteins_100g",
         "salt_100g",
         "fruits-vegetables-nuts-estimate-from-ingredients_100g",
-        "countries",
-        "countries_tags",
         "countries_en"
     ]
     COLS_STAT = [
