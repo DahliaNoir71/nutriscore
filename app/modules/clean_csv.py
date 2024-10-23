@@ -1,5 +1,5 @@
 import pandas as pd
-from config import Config as cfg
+from config import Config
 
 def read_csv_chunks(file_path, selected_columns, chunk_size):
     print("\nLecture du fichier CSV par chunks")
@@ -25,14 +25,14 @@ def filter_and_clean_data(dataframes, selected_columns, cols_stat, nutri_ok):
 
 def clean_csv():
     print("\nDébut de script clean_csv")
-    file_path = cfg.DIRECTORY_PATH + cfg.FILE_NAME
+    file_path = Config.DIRECTORY_PATH + Config.FILE_NAME
     chunks = read_csv_chunks(file_path,
-                             cfg.SELECTED_COLS,
-                             cfg.CHUNK_SIZE)
+                             Config.SELECTED_COLS,
+                             Config.CHUNK_SIZE)
     clean_data = filter_and_clean_data(chunks,
-                                       cfg.SELECTED_COLS,
-                                       cfg.COLS_STAT,
-                                       cfg.NUTRI_OK)
-    output_name = cfg.DIRECTORY_PATH + cfg.OUTPUT_NAME
+                                       Config.SELECTED_COLS,
+                                       Config.COLS_STAT,
+                                       Config.NUTRI_OK)
+    output_name = Config.DIRECTORY_PATH + Config.OUTPUT_NAME
     clean_data.to_csv(output_name, sep='\t', index=False)
     print("\nFin de script clean_csv")
