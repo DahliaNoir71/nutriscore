@@ -1,7 +1,7 @@
 import os
 import pandas as pd
-from sqlalchemy import create_engine, text
-from config import Config as cfg
+from sqlalchemy import create_engine
+from config import Config
 
 def get_db_engine():
     """
@@ -9,7 +9,7 @@ def get_db_engine():
 
     :return: SQLAlchemy engine connected to the specified SQLite database
     """
-    engine = create_engine('sqlite:///' + cfg.DB_FULL_PATH)
+    engine = create_engine('sqlite:///' + Config.DB_FULL_PATH)
     return engine
 
 def create_db_from_csv():
@@ -22,13 +22,13 @@ def create_db_from_csv():
     engine = get_db_engine()
     # Insertion du CSV par lots
     count = 1
-    for chunk in pd.read_csv(cfg.CSV_FULL_PATH,
-                             chunksize=cfg.CHUNK_SIZE,
+    for chunk in pd.read_csv(Config.CSV_FULL_PATH,
+                             chunksize=Config.CHUNK_SIZE,
                              low_memory=False,
                              on_bad_lines='skip',
                              sep='\t',
                              dtype=str):
-        chunk.to_sql(cfg.TABLE_NAME, con=engine, if_exists='append', index=False)
+        chunk.to_sql(Config.TABLE_NAME, con=engine, if_exists='append', index=False)
         print('\n', count, '')
         print(f"Insertion d'un chunk de {len(chunk)} lignes")
         count += 1
@@ -39,7 +39,7 @@ def set_db_nutriscore():
 
     :return: None
     """
-    if not os.path.isfile(cfg.DB_FULL_PATH):
+    if not os.path.isfile(Config.DB_FULL_PATH):
         create_db_from_csv()
     else:
-        print("Base de données " + cfg.DB_NAME + " déjà créée")
+        print("Base de données " + Config.DB_NAME + " déjà créée")
