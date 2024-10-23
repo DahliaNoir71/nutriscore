@@ -1,55 +1,5 @@
 import pandas as pd
-
-# Constantes
-SELECTED_COLS = [
-    "code",
-    "product_name",
-    "quantity",
-    "brands",
-    "categories",
-    "ingredients_text",
-    "nutriscore_score",
-    "nutriscore_grade",
-    "energy-kj_100g",
-    "energy-kcal_100g",
-    "fat_100g",
-    "saturated-fat_100g",
-    "omega-3-fat_100g",
-    "omega-6-fat_100g",
-    "sugars_100g",
-    "added-sugars_100g",
-    "fiber_100g",
-    "proteins_100g",
-    "salt_100g",
-    "fruits-vegetables-nuts-estimate-from-ingredients_100g",
-    "countries",
-    "countries_tags",
-    "countries_en"
-]
-
-COLS_STAT = [
-    "nutriscore_score",
-    "nutriscore_grade",
-    "energy-kj_100g",
-    "energy-kcal_100g",
-    "fat_100g",
-    "saturated-fat_100g",
-    "omega-3-fat_100g",
-    "omega-6-fat_100g",
-    "sugars_100g",
-    "added-sugars_100g",
-    "fiber_100g",
-    "proteins_100g",
-    "salt_100g",
-    "fruits-vegetables-nuts-estimate-from-ingredients_100g"
-]
-
-DIRECTORY_PATH = "../static/"
-FILE_NAME = "en.openfoodfacts.org.products.csv"
-OUTPUT_NAME = 'openfoodfact_clean.csv'
-CHUNK_SIZE = 10000
-NUTRI_OK = ["a", "b", "c", "d", "e"]
-
+from config import Config as cfg
 
 def read_csv_chunks(file_path, selected_columns, chunk_size):
     print("\nLecture du fichier CSV par chunks")
@@ -75,8 +25,14 @@ def filter_and_clean_data(dataframes, selected_columns, cols_stat, nutri_ok):
 
 def clean_csv():
     print("\nDébut de script clean_csv")
-    file_path = DIRECTORY_PATH + FILE_NAME
-    chunks = read_csv_chunks(file_path, SELECTED_COLS, CHUNK_SIZE)
-    clean_data = filter_and_clean_data(chunks, SELECTED_COLS, COLS_STAT, NUTRI_OK)
-    clean_data.to_csv(DIRECTORY_PATH + OUTPUT_NAME, sep='\t', index=False)
+    file_path = cfg.DIRECTORY_PATH + cfg.FILE_NAME
+    chunks = read_csv_chunks(file_path,
+                             cfg.SELECTED_COLS,
+                             cfg.CHUNK_SIZE)
+    clean_data = filter_and_clean_data(chunks,
+                                       cfg.SELECTED_COLS,
+                                       cfg.COLS_STAT,
+                                       cfg.NUTRI_OK)
+    output_name = cfg.DIRECTORY_PATH + cfg.OUTPUT_NAME
+    clean_data.to_csv(output_name, sep='\t', index=False)
     print("\nFin de script clean_csv")
