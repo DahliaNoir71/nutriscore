@@ -34,7 +34,10 @@ def read_csv_chunks(file_path, selected_columns, chunk_size):
                          header=0,
                          chunksize=chunk_size,
                          on_bad_lines="skip")
-    selected_chunks = [chunk[selected_columns] for chunk in chunks]
+    if selected_columns != []:
+        selected_chunks = [chunk[selected_columns] for chunk in chunks]
+    else:
+        selected_chunks = [chunk for chunk in chunks]
     return selected_chunks
 
 

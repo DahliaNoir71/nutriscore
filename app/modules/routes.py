@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash, current_app
 from app.modules.forms import NutriScoreForm
 from app.modules.models import db, Product
 
@@ -48,12 +48,18 @@ def predict():
         pass
     return render_template('prediction_form.html', form=form)
 
-@main.route('/browse_data')
-def browse_data():
-    """
-    Route to browse training data.
+@main.route('/training_data')
+def training_data():
+    products = current_app.config['PRODUCTS_DF']
+    nutriscore_grades = sorted(products['nutriscore_grade'].dropna().unique())  # Extract unique values and sort alphabetically
+    return render_template('training_data.html', nutriscore_grades=nutriscore_grades)
 
-    :return: A page displaying the training data.
-    """
-    # Logic to browse training data
-    return "This page will show the training data."
+# Search Route
+@main.route('/search', methods=['POST'])
+def search():
+    # Retrieve the products DataFrame from the app config
+    products = current_app.config['PRODUCTS_DF']
+
+    # Here, you can define the search functionality (e.g., filter products based on categories or other criteria)
+    # For now, let's redirect back to the training data page (this can be updated as you implement search)
+    return redirect(url_for('main.training_data'))
