@@ -47,11 +47,12 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///nutriscore.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DB_NAME = "nutriscore.db"
-    DB_FULL_PATH = "app/static/" + DB_NAME
+    APP_STATIC_PATH = "app/static/"
+    DB_FULL_PATH = APP_STATIC_PATH + DB_NAME
     TABLE_NAME = "produits"
     ORIGINAL_CSV_NAME = "en.openfoodfacts.org.products.csv"
     CLEANED_CSV_NAME = "openfoodfact_clean.csv"
-    CSV_FULL_PATH = "app/static/" + CLEANED_CSV_NAME
+    CSV_FULL_PATH = APP_STATIC_PATH + CLEANED_CSV_NAME
     CHUNK_SIZE = 10000
     VIEW_NAME = 'products_view'
     SELECTED_COLS = [
@@ -94,7 +95,6 @@ class Config:
         "fruits-vegetables-nuts-estimate-from-ingredients_100g"
     ]
     DIRECTORY_PATH = "../static/"
-    FILE_NAME = "en.openfoodfacts.org.products.csv"
     OUTPUT_NAME = 'openfoodfact_clean.csv'
     NUTRI_OK = ["a", "b", "c", "d", "e"]
     COUNTRIES_EN_COL = "countries_en"

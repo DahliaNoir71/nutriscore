@@ -34,8 +34,7 @@ def clean_countries(dataframe, column_name):
     :return: The cleaned DataFrame with country names processed to ensure consistency and validity.
     """
     print("\nNettoyage des noms de pays")
-    print("\nSplit de la colonne")
-    # Traitez et divisez les noms des pays
+    print("\nSplit de la colonne " + column_name)
     dataframe[column_name] = dataframe[column_name].str.split(',')
     print("\nExplode des valeurs")
     dataframe = dataframe.explode(column_name)
@@ -46,7 +45,7 @@ def clean_countries(dataframe, column_name):
         lambda x: x if x in countries_en_names else Config.UNKNOWN_STR)
     print("\nRemplis les pays vides")
     dataframe[column_name] = dataframe[column_name].fillna(Config.UNKNOWN_STR)
-    print("\nExpôrt CSV de la colonne")
-    dataframe[column_name].to_csv('output.csv', index=False)
+    print("\nExport CSV de la colonne")
+    dataframe[column_name].to_csv(Config.DIRECTORY_PATH + column_name + '.csv', index=False)
 
     return dataframe
