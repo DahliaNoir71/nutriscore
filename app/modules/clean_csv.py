@@ -1,5 +1,6 @@
 import pandas as pd
 from config import Config
+from analyse_countries import clean_countries
 
 def read_csv_chunks(file_path, selected_columns, chunk_size):
     """
@@ -34,6 +35,7 @@ def filter_and_clean_data(dataframes, selected_columns, cols_stat, nutri_ok):
     df_not_na = pd.concat(list_df_not_na, ignore_index=True)
     df_not_na = df_not_na[df_not_na["nutriscore_grade"].isin(nutri_ok)]
     df_not_na[cols_stat] = df_not_na[cols_stat].fillna(0)
+
     return df_not_na
 
 def clean_csv():
@@ -51,6 +53,10 @@ def clean_csv():
                                        Config.SELECTED_COLS,
                                        Config.COLS_STAT,
                                        Config.NUTRI_OK)
+    clean_data = clean_countries(clean_data, Config.COUNTRIES_EN_COL)
     output_name = Config.DIRECTORY_PATH + Config.OUTPUT_NAME
     clean_data.to_csv(output_name, sep='\t', index=False)
     print("\nFin de script clean_csv")
+
+if __name__ == '__main__':
+    clean_csv()
