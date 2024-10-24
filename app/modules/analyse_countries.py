@@ -26,12 +26,27 @@ def fetch_countries_en():
     except ValueError as json_err:
         print(f"Erreur de décodage JSON: {json_err}")
 
-def clean_countries(dataframe):
+
+def clean_countries(dataframe, column_name):
     """
     :param dataframe: The DataFrame containing country names to be cleaned.
+    :param column_name: The specific column in the DataFrame to be cleaned.
     :return: The cleaned DataFrame with country names processed to ensure consistency and validity.
     """
-    dataframe[Config.COUNTRIES_EN_COL].str.split(',').explode().drop_duplicates()
+    print("\nNettoyage des noms de pays")
+    print("\nSplit de la colonne")
+    # Traitez et divisez les noms des pays
+    dataframe[column_name] = dataframe[column_name].str.split(',')
+    print("\nExplode des valeurs")
+    dataframe = dataframe.explode(column_name)
+    print("\nRécupération de la liste des pays par API")
     countries_en_names = fetch_countries_en()
-    dataframe[Config.COUNTRIES_EN_COL].apply(lambda x: x if x in countries_en_names else Config.UNKNOWN_STR)
-    dataframe[Config.COUNTRIES_EN_COL].fillna(Config.UNKNOWN_STR)
+    print("\nTransforme les pays inconnus")
+    dataframe[column_name] = dataframe[column_name].apply(
+        lambda x: x if x in countries_en_names else Config.UNKNOWN_STR)
+    print("\nRemplis les pays vides")
+    dataframe[column_name] = dataframe[column_name].fillna(Config.UNKNOWN_STR)
+    print("\nExpôrt CSV de la colonne")
+    dataframe[column_name].to_csv('output.csv', index=False)
+
+    return dataframe
