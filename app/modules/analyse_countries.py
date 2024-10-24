@@ -26,7 +26,6 @@ def fetch_countries_en():
     except ValueError as json_err:
         print(f"Erreur de décodage JSON: {json_err}")
 
-
 def clean_countries(dataframe, column_name):
     """
     :param dataframe: The DataFrame containing country names to be cleaned.

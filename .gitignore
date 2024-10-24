@@ -3,6 +3,7 @@ __pycache__
 
 # CSV Files
 /app/static/en.openfoodfacts.org.products.csv
+/app/static/openfoodfact_clean.csv
 
 # Databases
 /instance/

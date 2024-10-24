@@ -1,6 +1,6 @@
 import pandas as pd
 from config import Config
-from analyse_countries import clean_countries
+from app.modules.analyse_countries import clean_countries
 
 def read_csv_chunks(file_path, selected_columns, chunk_size):
     """
@@ -16,24 +16,35 @@ def read_csv_chunks(file_path, selected_columns, chunk_size):
     # Initialisation du compteur
     chunk_counter = 0
 
-    # Lecture du fichier CSV par morceaux
-    for chunk in pd.read_csv(file_path,
-                             sep="\t",
-                             low_memory=False,
-                             header=0,
-                             chunksize=chunk_size,
-                             on_bad_lines="skip",
-                             usecols=selected_columns):
-        selected_chunks.append(chunk)
+    if selected_columns != []:
+        # Lecture du fichier CSV par morceaux
+        for chunk in pd.read_csv(file_path,
+                                sep="\t",
+                                low_memory=False,
+                                header=0,
+                                chunksize=chunk_size,
+                                on_bad_lines="skip",
+                                usecols=selected_columns):
+            selected_chunks.append(chunk)
 
-        # Incrémentation et affichage du compteur
-        chunk_counter += 1
-        print(f"Morceau {chunk_counter} traité")
+            # Incrémentation et affichage du compteur
+            chunk_counter += 1
+            print(f"Morceau {chunk_counter} traité")
+    else:
+        # Lecture du fichier CSV par morceaux
+        for chunk in pd.read_csv(file_path,
+                                sep="\t",
+                                low_memory=False,
+                                header=0,
+                                chunksize=chunk_size,
+                                on_bad_lines="skip"):
+            selected_chunks.append(chunk)
+
+            # Incrémentation et affichage du compteur
+            chunk_counter += 1
+            print(f"Morceau {chunk_counter} traité")
 
     return selected_chunks
-
-
-
 
 def filter_and_clean_data(dataframes, selected_columns, cols_stat, nutri_ok):
     """
@@ -74,5 +85,5 @@ def clean_csv():
     clean_data.to_csv(cleaned_file_path, sep='\t', index=False)
     print("\nFin de script clean_csv")
 
-if __name__ == '__main__':
-    clean_csv()
+#if __name__ == '__main__':
+#    clean_csv()
