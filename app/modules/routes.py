@@ -60,6 +60,6 @@ def search():
     # Retrieve the products DataFrame from the app config
     products = current_app.config['PRODUCTS_DF']
 
-    # Here, you can define the search functionality (e.g., filter products based on categories or other criteria)
-    # For now, let's redirect back to the training data page (this can be updated as you implement search)
+    # Here, you can define the search functionality
+    # For now, let's redirect back to the training data page
     return redirect(url_for('main.training_data'))
