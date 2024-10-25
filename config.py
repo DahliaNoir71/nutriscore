@@ -48,7 +48,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DB_NAME = "nutriscore.db"
     APP_STATIC_PATH = "app/static/"
-    DB_FULL_PATH = APP_STATIC_PATH + DB_NAME
+    DB_FULL_PATH = 'instance/' + DB_NAME
     TABLE_NAME = "produits"
     ORIGINAL_CSV_NAME = "en.openfoodfacts.org.products.csv"
     CLEANED_CSV_NAME = "openfoodfact_clean.csv"
