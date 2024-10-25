@@ -52,7 +52,8 @@ class Config:
     TABLE_NAME = "produits"
     ORIGINAL_CSV_NAME = "en.openfoodfacts.org.products.csv"
     CLEANED_CSV_NAME = "openfoodfact_clean.csv"
-    CSV_FULL_PATH = APP_STATIC_PATH + CLEANED_CSV_NAME
+    ORIGINAL_CSV_FULL_PATH = APP_STATIC_PATH + ORIGINAL_CSV_NAME
+    CLEANED_CSV_FULL_PATH = APP_STATIC_PATH + CLEANED_CSV_NAME
     CHUNK_SIZE = 10000
     VIEW_NAME = 'products_view'
     SELECTED_COLS = [

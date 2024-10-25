@@ -10,7 +10,7 @@ def read_csv_chunks(file_path, selected_columns, chunk_size):
     :param chunk_size: The number of rows per chunk to be read from the CSV file.
     :return: A list of DataFrame chunks, each containing the selected columns from the CSV file.
     """
-
+    print("read_csv_chunks")
     # Initialisation de la liste pour stocker les morceaux sélectionnés
     selected_chunks = []
 
@@ -23,7 +23,7 @@ def read_csv_chunks(file_path, selected_columns, chunk_size):
                              on_bad_lines="skip",
                              usecols=selected_columns)
 
-    with tqdm(desc="Lecture de CSV", unit='chunk') as pbar:
+    with tqdm(desc="Lecture du CSV " + file_path, unit='chunk') as pbar:
         for chunk in chunk_iter:
             selected_chunks.append(chunk)
             # Mise à jour de la barre de progression
@@ -45,7 +45,7 @@ def filter_and_clean_data(dataframes, selected_columns, cols_stat, nutri_ok):
     :return: Concatenated and cleaned DataFrame comprising only the specified columns and filtered by acceptable 'nutriscore_grade' values.
     """
 
-    print("\nFiltrage et nettoyage des datas")
+    print("\nfilter_and_clean_data")
 
     # Filter rows where 'nutriscore_score' and 'nutriscore_grade' are not missing, and select specified columns
     list_df_not_na = [
