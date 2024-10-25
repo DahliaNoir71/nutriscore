@@ -52,7 +52,8 @@ class Config:
     TABLE_NAME = "produits"
     ORIGINAL_CSV_NAME = "en.openfoodfacts.org.products.csv"
     CLEANED_CSV_NAME = "openfoodfact_clean.csv"
-    CSV_FULL_PATH = APP_STATIC_PATH + CLEANED_CSV_NAME
+    ORIGINAL_CSV_FULL_PATH = APP_STATIC_PATH + ORIGINAL_CSV_NAME
+    CLEANED_CSV_FULL_PATH = APP_STATIC_PATH + CLEANED_CSV_NAME
     CHUNK_SIZE = 10000
     VIEW_NAME = 'products_view'
     SELECTED_COLS = [
@@ -81,6 +82,20 @@ class Config:
     COLS_STAT = [
         "nutriscore_score",
         "nutriscore_grade",
+        "energy-kj_100g",
+        "energy-kcal_100g",
+        "fat_100g",
+        "saturated-fat_100g",
+        "omega-3-fat_100g",
+        "omega-6-fat_100g",
+        "sugars_100g",
+        "added-sugars_100g",
+        "fiber_100g",
+        "proteins_100g",
+        "salt_100g",
+        "fruits-vegetables-nuts-estimate-from-ingredients_100g"
+    ]
+    COLS_100G = [
         "energy-kj_100g",
         "energy-kcal_100g",
         "fat_100g",
