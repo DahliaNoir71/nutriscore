@@ -1,5 +1,10 @@
+import os
+
 import requests
+from tqdm import tqdm
+
 from config import Config
+
 
 def fetch_countries_en():
     """
@@ -33,19 +38,23 @@ def clean_countries(dataframe, column_name):
     :param column_name: The specific column in the DataFrame to be cleaned.
     :return: The cleaned DataFrame with country names processed to ensure consistency and validity.
     """
-    print("\nNettoyage des noms de pays")
-    print("\nSplit de la colonne " + column_name)
+    # Divise et explode pour obtenir chaque pays comme une ligne séparée
     dataframe[column_name] = dataframe[column_name].str.split(',')
-    print("\nExplode des valeurs")
     dataframe = dataframe.explode(column_name)
-    print("\nRécupération de la liste des pays par API")
-    countries_en_names = fetch_countries_en()
-    print("\nTransforme les pays inconnus")
-    dataframe[column_name] = dataframe[column_name].apply(
-        lambda x: x if x in countries_en_names else Config.UNKNOWN_STR)
-    print("\nRemplis les pays vides")
+    # Nettoie les espaces supplémentaires et normalise en minuscules
+    dataframe[column_name] = dataframe[column_name].str.strip().str.lower()
+    # Obtenez la liste des noms de pays en anglais
+    countries_en_names = {country.lower(): country for country in fetch_countries_en()}
+    # Applique le nettoyage avec une barre de progression
+    tqdm.pandas(desc="Nettoyage des pays")
+    dataframe[column_name] = dataframe[column_name].progress_apply(
+        lambda x: countries_en_names.get(x, Config.UNKNOWN_STR)
+    )
+    # Gère les valeurs NaN en remplissant avec UNKNOWN_STR
     dataframe[column_name] = dataframe[column_name].fillna(Config.UNKNOWN_STR)
-    print("\nExport CSV de la colonne")
-    dataframe[column_name].to_csv(Config.DIRECTORY_PATH + column_name + '.csv', index=False)
+
+    # Enregistre les données nettoyées dans un fichier CSV
+    output_path = os.path.join(Config.DIRECTORY_PATH, f"{column_name}.csv")
+    dataframe[column_name].to_csv(output_path, index=False)
 
     return dataframe
