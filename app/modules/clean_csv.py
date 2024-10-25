@@ -1,70 +1,58 @@
 import pandas as pd
+from tqdm import tqdm
 from config import Config
 from app.modules.analyse_countries import clean_countries
 
 def read_csv_chunks(file_path, selected_columns, chunk_size):
     """
     :param file_path: The path to the CSV file to be read.
-    :param selected_columns: A list of columns to be selected from each chunk of the CSV file.
+    :param selected_columns: A list of column names to be read from the CSV file.
     :param chunk_size: The number of rows per chunk to be read from the CSV file.
-    :return: A list of pandas DataFrame chunks, each containing only the selected columns.
+    :return: A list of DataFrame chunks, each containing the selected columns from the CSV file.
     """
-    print("\nLecture du fichier CSV par chunks")
+    print("read_csv_chunks")
     # Initialisation de la liste pour stocker les morceaux sélectionnés
     selected_chunks = []
 
-    # Initialisation du compteur
-    chunk_counter = 0
+    # Lire le fichier CSV en chunks avec une barre de progression
+    chunk_iter = pd.read_csv(file_path,
+                             sep="\t",
+                             low_memory=False,
+                             header=0,
+                             chunksize=chunk_size,
+                             on_bad_lines="skip",
+                             usecols=selected_columns)
 
-    if selected_columns != []:
-        # Lecture du fichier CSV par morceaux
-        for chunk in pd.read_csv(file_path,
-                                sep="\t",
-                                low_memory=False,
-                                header=0,
-                                chunksize=chunk_size,
-                                on_bad_lines="skip",
-                                usecols=selected_columns):
+    with tqdm(desc="Lecture du CSV " + file_path, unit='chunk') as pbar:
+        for chunk in chunk_iter:
             selected_chunks.append(chunk)
-
-            # Incrémentation et affichage du compteur
-            chunk_counter += 1
-            print(f"Morceau {chunk_counter} traité")
-    else:
-        # Lecture du fichier CSV par morceaux
-        for chunk in pd.read_csv(file_path,
-                                sep="\t",
-                                low_memory=False,
-                                header=0,
-                                chunksize=chunk_size,
-                                on_bad_lines="skip"):
-            selected_chunks.append(chunk)
-
-            # Incrémentation et affichage du compteur
-            chunk_counter += 1
-            print(f"Morceau {chunk_counter} traité")
+            # Mise à jour de la barre de progression
+            pbar.update(1)
+            # (Optionnel) Afficher des informations supplémentaires dans la barre de progression
+            pbar.set_postfix(rows=chunk.shape[0])
 
     return selected_chunks
 
+
+
+
 def filter_and_clean_data(dataframes, selected_columns, cols_stat, nutri_ok):
     """
-    Filters and cleans multiple DataFrames based on specified columns and criteria.
-
     :param dataframes: List of pandas DataFrame objects to be filtered and cleaned.
     :param selected_columns: List of column names to retain in the DataFrame after filtering.
     :param cols_stat: List of column names where missing values should be filled with 0.
     :param nutri_ok: List of acceptable 'nutriscore_grade' values to retain in the filtered DataFrame.
     :return: Concatenated and cleaned DataFrame comprising only the specified columns and filtered by acceptable 'nutriscore_grade' values.
     """
-    
-    print("\nFiltrage et nettoyage des datas")
+
+    print("\nfilter_and_clean_data")
 
     # Filter rows where 'nutriscore_score' and 'nutriscore_grade' are not missing, and select specified columns
     list_df_not_na = [
         df[df[['nutriscore_score', 'nutriscore_grade']].notna().all(axis=1)][selected_columns]
         for df in dataframes if len(df) > 0  # Only process non-empty DataFrames
     ]
-    
+
     # Concatenate all filtered DataFrames into a single DataFrame
     df_not_na = pd.concat(list_df_not_na, ignore_index=True)
 
@@ -86,9 +74,9 @@ def read_and_clean_csv():
 
     :return: None
     """
-    
+
     print("\nDébut de script clean_csv")
-    
+
     # Define the path to the original CSV file using configuration settings
     file_path = Config.DIRECTORY_PATH + Config.ORIGINAL_CSV_NAME
 
