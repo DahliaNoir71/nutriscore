@@ -50,6 +50,11 @@ def predict():
 
 @main.route('/training_data')
 def training_data():
+    """
+    Retrieves and processes the products DataFrame from the app config to display unique Nutri-Score grades.
+
+    :return: Renders the training_data template with a list of sorted unique Nutri-Score grades.
+    """
     products = current_app.config['PRODUCTS_DF']
     nutriscore_grades = sorted(products['nutriscore_grade'].dropna().unique())  # Extract unique values and sort alphabetically
     return render_template('training_data.html', nutriscore_grades=nutriscore_grades)
@@ -57,6 +62,11 @@ def training_data():
 # Search Route
 @main.route('/search', methods=['POST'])
 def search():
+    """
+    Retrieves the products DataFrame from the app config and handles HTTP POST requests for searching products.
+
+    :return: Redirects back to the training data page.
+    """
     # Retrieve the products DataFrame from the app config
     products = current_app.config['PRODUCTS_DF']
 
