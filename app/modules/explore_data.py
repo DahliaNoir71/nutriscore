@@ -19,4 +19,5 @@ def load_dataframe():
     return products
 
 def display_graphs():
-    print('Todo')
+    # Display box charts for columns containing _100g in their name
+    print("\ndisplay_graphs")

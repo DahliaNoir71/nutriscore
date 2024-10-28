@@ -15,13 +15,21 @@ def read_csv_chunks(file_path, selected_columns, chunk_size):
     selected_chunks = []
 
     # Lire le fichier CSV en chunks avec une barre de progression
-    chunk_iter = pd.read_csv(file_path,
-                             sep="\t",
-                             low_memory=False,
-                             header=0,
-                             chunksize=chunk_size,
-                             on_bad_lines="skip",
-                             usecols=selected_columns)
+    if selected_columns != []:
+        chunk_iter = pd.read_csv(file_path,
+                                sep="\t",
+                                low_memory=False,
+                                header=0,
+                                chunksize=chunk_size,
+                                on_bad_lines="skip",
+                                usecols=selected_columns)
+    else:
+        chunk_iter = pd.read_csv(file_path,
+                                sep="\t",
+                                low_memory=False,
+                                header=0,
+                                chunksize=chunk_size,
+                                on_bad_lines="skip")
 
     with tqdm(desc="Lecture du CSV " + file_path, unit='chunk') as pbar:
         for chunk in chunk_iter:
@@ -32,9 +40,6 @@ def read_csv_chunks(file_path, selected_columns, chunk_size):
             pbar.set_postfix(rows=chunk.shape[0])
 
     return selected_chunks
-
-
-
 
 def filter_and_clean_data(dataframes, selected_columns, cols_stat, nutri_ok):
     """
