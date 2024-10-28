@@ -3,6 +3,20 @@ from config import Config
 from app.modules.clean_csv import read_csv_chunks
 
 def load_dataframe():
+    """
+    Load a DataFrame from a large CSV file by reading it in chunks.
+
+    This function reads a CSV file specified by the `Config.ORIGINAL_CSV_FULL_PATH` constant,
+    using the `read_csv_chunks` function from the `app.modules.clean_csv` module. The CSV file
+    is read in chunks of size specified by the `Config.CHUNK_SIZE` constant. Each chunk is stored
+    in a list of DataFrames, which are then concatenated into a single DataFrame.
+
+    Parameters:
+    None
+
+    Returns:
+    pandas.DataFrame: A DataFrame containing the data from the CSV file.
+    """
     print("\nload_dataframe")
     products = None
     list_df = []

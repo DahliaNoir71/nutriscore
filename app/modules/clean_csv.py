@@ -5,6 +5,8 @@ from app.modules.analyse_countries import clean_countries
 
 def read_csv_chunks(file_path, selected_columns, chunk_size):
     """
+    Read a CSV file in chunks and return a list of DataFrame chunks.
+
     :param file_path: The path to the CSV file to be read.
     :param selected_columns: A list of column names to be read from the CSV file.
     :param chunk_size: The number of rows per chunk to be read from the CSV file.
@@ -43,6 +45,8 @@ def read_csv_chunks(file_path, selected_columns, chunk_size):
 
 def filter_and_clean_data(dataframes, selected_columns, cols_stat, nutri_ok):
     """
+    Filter and clean a list of pandas DataFrame objects.
+
     :param dataframes: List of pandas DataFrame objects to be filtered and cleaned.
     :param selected_columns: List of column names to retain in the DataFrame after filtering.
     :param cols_stat: List of column names where missing values should be filled with 0.
@@ -74,7 +78,7 @@ def filter_and_clean_data(dataframes, selected_columns, cols_stat, nutri_ok):
 
 def read_and_clean_csv():
     """
-    Cleans a CSV file by reading it in chunks, filtering, and cleaning the data according to specified configurations,
+    Clean a CSV file by reading it in chunks, filtering, and cleaning the data according to specified configurations,
     and then outputting the cleaned data to a new CSV file.
 
     :return: None
@@ -104,5 +108,5 @@ def read_and_clean_csv():
 
     print("\nFin de script clean_csv")
 
-#if __name__ == '__main__':
-#    read_and_clean_csv()
+if __name__ == '__main__':
+   read_and_clean_csv()
