@@ -4,27 +4,47 @@ from wtforms.validators import DataRequired, Optional, NumberRange, ValidationEr
 
 class NutriScoreForm(FlaskForm):
     """
-        NutriScoreForm
-        --------------
+    NutriScoreForm
+    --------------
 
-        A FlaskForm for collecting nutritional information about a product
-        to predict its NutriScore.
+    A FlaskForm for collecting nutritional information about a product
+    to predict its NutriScore.
 
-        Attributes:
-            product_name : str
-                the name of the product
-            energy : decimal.Decimal
-                energy content of the product in kilojoules
-            fat : decimal.Decimal
-                fat content of the product in grams
-            saturated_fat : decimal.Decimal
-                saturated fat content of the product in grams
-            sugar : decimal.Decimal
-                sugar content of the product in grams
-            salt : decimal.Decimal
-                salt content of the product in grams
-            submit : flask_wtf.SubmitField
-                field to submit the form
+    Attributes:
+        product_name : str
+            the name of the product
+        quantity : str
+            the quantity of the product
+        brands : str
+            the brands of the product
+        categories : str
+            the categories of the product
+        ingredients_text : str
+            the ingredients of the product
+        energy_kj_100g : decimal.Decimal
+            energy content of the product in kilojoules per 100g
+        energy_kcal_100g : decimal.Decimal
+            energy content of the product in kilocalories per 100g
+        fat_100g : decimal.Decimal
+            fat content of the product in grams per 100g
+        saturated_fat_100g : decimal.Decimal
+            saturated fat content of the product in grams per 100g
+        omega_3_fat_100g : decimal.Decimal
+            omega-3 fat content of the product in grams per 100g
+        omega_6_fat_100g : decimal.Decimal
+            omega-6 fat content of the product in grams per 100g
+        sugars_100g : decimal.Decimal
+            sugar content of the product in grams per 100g
+        added_sugars_100g : decimal.Decimal
+            added sugar content of the product in grams per 100g
+        fiber_100g : decimal.Decimal
+            fiber content of the product in grams per 100g
+        proteins_100g : decimal.Decimal
+            protein content of the product in grams per 100g
+        salt_100g : decimal.Decimal
+            salt content of the product in grams per 100g
+        submit : flask_wtf.SubmitField
+            field to submit the form
     """
     product_name = StringField('Product Name', validators=[DataRequired()])
     quantity = StringField('Quantity', validators=[Optional()])
@@ -51,6 +71,9 @@ class NutriScoreForm(FlaskForm):
     def validate(self, extra_validators=None):
         """
         Custom validation method to check that at least one field in the Nutritional Content section is filled.
+
+        Returns:
+            bool: True if the form is valid, False otherwise.
         """
         if not super().validate(extra_validators=extra_validators):
             return False

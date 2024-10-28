@@ -31,8 +31,14 @@ def fetch_countries_en():
     except ValueError as json_err:
         print(f"Erreur de décodage JSON: {json_err}")
 
+
 def clean_countries(dataframe, column_name):
     """
+    Cleans country names in a DataFrame by splitting and exploding them, stripping extra spaces, and normalizing to lowercase.
+    It then maps the cleaned country names to their English counterparts using an API.
+    NaN values are replaced with a specified unknown string.
+    The cleaned data is saved to a CSV file.
+
     :param dataframe: The DataFrame containing country names to be cleaned.
     :param column_name: The specific column in the DataFrame to be cleaned.
     :return: The cleaned DataFrame with country names processed to ensure consistency and validity.

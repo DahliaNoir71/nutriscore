@@ -80,7 +80,6 @@ def training_data():
         # Send to a 'Loading dataframe' template
         return redirect(url_for('main.loading_data'))
 
-    # Retrieve the products DataFrame from the app config
     products = current_app.config['PRODUCTS_DF']
 
     # Retrieve the products DataFrame from the app config
@@ -91,6 +90,14 @@ def training_data():
 # Search Route
 @main.route('/search', methods=['POST'])
 def search():
+    """
+    Retrieves the products DataFrame from the app config and handles HTTP POST requests for searching products.
+
+    :return: Redirects back to the training data page.
+    """
+    # Retrieve the products DataFrame from the app config
+    products = current_app.config['PRODUCTS_DF']
+
     # Here, you can define the search functionality
     # For now, let's redirect back to the training data page
     return redirect(url_for('main.training_data'))

@@ -4,9 +4,7 @@ db = SQLAlchemy()
 
 class Product(db.Model):
     """
-        class Product(db.Model):
-
-        Represents a product in the database.
+    Represents a product in the database.
 
     Attributes:
         id (int): Database primary key; unique identifier for the product.
