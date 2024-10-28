@@ -52,6 +52,7 @@ class Config:
     TABLE_NAME = "produits"
     ORIGINAL_CSV_NAME = "en.openfoodfacts.org.products.csv"
     CLEANED_CSV_NAME = "openfoodfact_clean.csv"
+    CLEANED_100G_CSV_NAME = "100g_clean.csv"
     ORIGINAL_CSV_FULL_PATH = APP_STATIC_PATH + ORIGINAL_CSV_NAME
     CLEANED_CSV_FULL_PATH = APP_STATIC_PATH + CLEANED_CSV_NAME
     CHUNK_SIZE = 10000
@@ -96,7 +97,6 @@ class Config:
         "fruits-vegetables-nuts-estimate-from-ingredients_100g"
     ]
     COLS_100G = [
-        "energy-kj_100g",
         "energy-kcal_100g",
         "fat_100g",
         "saturated-fat_100g",
@@ -107,7 +107,8 @@ class Config:
         "fiber_100g",
         "proteins_100g",
         "salt_100g",
-        "fruits-vegetables-nuts-estimate-from-ingredients_100g"
+        "fruits-vegetables-nuts-estimate-from-ingredients_100g",
+        "nutriscore_score",
     ]
     DIRECTORY_PATH = "../static/"
     OUTPUT_NAME = 'openfoodfact_clean.csv'
