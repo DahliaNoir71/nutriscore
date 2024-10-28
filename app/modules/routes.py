@@ -1,8 +1,15 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, current_app
+from flask import Blueprint, render_template, redirect, url_for, flash, current_app, jsonify
+from config import Config
 from app.modules.forms import NutriScoreForm
 from app.modules.models import db, Product
+from app.modules.explore_data import load_dataframe
+import threading
 
 main = Blueprint('main', __name__)
+
+@main.route('/loading-dataframe-status', methods=['GET', 'POST'])
+def loading_dataframe_status_check():
+    return jsonify(current_app.config['loading_dataframe_status'])
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -48,14 +55,35 @@ def predict():
         pass
     return render_template('prediction_form.html', form=form)
 
+@main.route('/loading_data')
+def loading_data():
+    # Set the status to indicate that loading has not yet completed
+    current_app.config['loading_dataframe_status'] = {"complete": False}
+
+    # Capture the current app context to pass it into the new thread
+    app_context = current_app._get_current_object()
+
+    # Function to run in a new thread
+    def load_data_with_context():
+        with app_context.app_context():
+            load_dataframe()
+
+    # Start the thread
+    threading.Thread(target=load_data_with_context).start()
+
+    return render_template('loading_dataframe.html')
+
 @main.route('/training_data')
 def training_data():
-    """
-    Retrieves and processes the products DataFrame from the app config to display unique Nutri-Score grades.
+    #Checks if the dataframe is already loaded:
+    if 'PRODUCTS_DF' not in current_app.config:
+        # Send to a 'Loading dataframe' template
+        return redirect(url_for('main.loading_data'))
 
-    :return: Renders the training_data template with a list of sorted unique Nutri-Score grades.
-    """
     products = current_app.config['PRODUCTS_DF']
+
+    # Retrieve the products DataFrame from the app config
+    #products = current_app.config['PRODUCTS_DF']
     nutriscore_grades = sorted(products['nutriscore_grade'].dropna().unique())  # Extract unique values and sort alphabetically
     return render_template('training_data.html', nutriscore_grades=nutriscore_grades)
 
