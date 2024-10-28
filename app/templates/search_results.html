@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Left Sidebar -->
+        <div class="col-md-2 sidebar-container">
+            {% include '_sidebar.html' %}
+        </div>
+
+        <!-- Right Content Area -->
+        <div class="col-md-10">
+            <h2 class="mt-4">Search Results</h2>
+
+            <!-- Check if there are any products to display -->
+            {% if products %}
+            <div class="product-list">
+                {% for product in products %}
+                    <div class="product-item">
+                        <!-- Product Image -->
+                        <div class="image-column" style="width: 150px; text-align: center;">
+                            {% if product.image_url %}
+                            <img src="{{ product.image_url }}" alt="No Image" class="product-image">
+                            {% else %}
+                            <img src="{{ url_for('static', filename='no-image.png') }}" alt="No Image Available" class="product-image">
+                            {% endif %}
+                        </div>
+                        <!-- Product Information -->
+                        <div class="product-info">
+                            <h4 style="color: red;">{{ product.product_name }}</h4>
+                            <p><strong>Quantity:</strong> {{ product.quantity }}</p>
+                            <p><strong>Code:</strong> {{ product.code }}</p>
+                            <p><strong>Brands:</strong> {{ product.brands }}</p>
+                            <p><strong>Nutriscore:</strong> {{ product.nutriscore_score }} ({{ product.nutriscore_grade }})</p>
+                            <p><strong>Countries:</strong> {{ product.country_clean | join(', ') }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            <!-- Pagination -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <!-- Previous Page Link -->
+                    {% if page > 1 %}
+                        <li class="page-item">
+                            <a class="page-link"
+                            href="{{ url_for('main.search_results', page=page-1, 
+                                                search_term=request.args.get('search_term', ''), 
+                                                search_columns=request.args.getlist('search_columns'),
+                                                nutriscore_grades=request.args.getlist('nutriscore_grades'), 
+                                                countries=request.args.getlist('countries')) }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    <!-- First Page Link -->
+                    {% if page > 3 %}
+                        <li class="page-item">
+                            <a class="page-link"
+                            href="{{ url_for('main.search_results', page=1, 
+                                                search_term=request.args.get('search_term', ''), 
+                                                search_columns=request.args.getlist('search_columns'),
+                                                nutriscore_grades=request.args.getlist('nutriscore_grades'), 
+                                                countries=request.args.getlist('countries')) }}">1</a>
+                        </li>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                    {% endif %}
+
+                    <!-- Page Numbers Around Current Page -->
+                    {% for p in range(page - 2, page + 3) %}
+                        {% if p > 0 and p <= total_pages %}
+                            <li class="page-item {% if p == page %}active{% endif %}">
+                                <a class="page-link"
+                                href="{{ url_for('main.search_results', page=p, 
+                                                    search_term=request.args.get('search_term', ''), 
+                                                    search_columns=request.args.getlist('search_columns'),
+                                                    nutriscore_grades=request.args.getlist('nutriscore_grades'), 
+                                                    countries=request.args.getlist('countries')) }}">{{ p }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    <!-- Last Page Link -->
+                    {% if page < total_pages - 2 %}
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                        <li class="page-item">
+                            <a class="page-link"
+                            href="{{ url_for('main.search_results', page=total_pages, 
+                                                search_term=request.args.get('search_term', ''), 
+                                                search_columns=request.args.getlist('search_columns'),
+                                                nutriscore_grades=request.args.getlist('nutriscore_grades'), 
+                                                countries=request.args.getlist('countries')) }}">{{ total_pages }}</a>
+                        </li>
+                    {% endif %}
+
+                    <!-- Next Page Link -->
+                    {% if page < total_pages %}
+                        <li class="page-item">
+                            <a class="page-link"
+                            href="{{ url_for('main.search_results', page=page+1, 
+                                                search_term=request.args.get('search_term', ''), 
+                                                search_columns=request.args.getlist('search_columns'),
+                                                nutriscore_grades=request.args.getlist('nutriscore_grades'), 
+                                                countries=request.args.getlist('countries')) }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% else %}
+                <p>No products found matching your criteria.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .product-item {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 15px;
+        background-color: white;
+    }
+    .product-image {
+        max-height: 150px; /* Set maximum height */
+        max-width: 150px;  /* Set maximum width */
+        width: auto;       /* Maintain aspect ratio */
+        height: auto;      /* Maintain aspect ratio */
+    }
+    .product-info {
+        margin-left: 20px;
+    }
+    .product-info h4 {
+        margin: 0;
+        font-size: 1.2em;
+    }
+    .product-info p {
+        margin: 0;
+    }
+</style>
+{% endblock %}
