@@ -6,9 +6,12 @@ from tqdm import tqdm
 
 def get_db_engine():
     """
-    Creates and returns a SQLAlchemy engine connected to an SQLite database
+    Creates and returns a SQLAlchemy engine connected to an SQLite database.
 
-    :return: SQLAlchemy engine connected to the specified SQLite database
+    :param None: This function does not take any parameters.
+
+    :return: SQLAlchemy engine connected to the specified SQLite database.
+             The engine is used to interact with the SQLite database.
     """
     engine = create_engine('sqlite:///' + Config.DB_FULL_PATH)
     return engine
@@ -18,6 +21,16 @@ def create_db_from_csv():
     Creates a SQLite database and populates it with data from a CSV file.
 
     :return: None
+
+    The function reads the CSV file in chunks, specified by the `CHUNK_SIZE` in the `Config` class,
+    and inserts each chunk into the SQLite database. It uses the `tqdm` library to display a progress bar
+    during the CSV file reading process.
+
+    Parameters:
+    None
+
+    Raises:
+    None
     """
     print("create_db_from_csv")
     # Crée une connexion à la base de données SQLite
@@ -42,9 +55,19 @@ def create_db_from_csv():
 
 def set_db_nutriscore():
     """
-    Checks if the database file exists; if not, creates the database from a CSV file.
+    This function checks if the database file exists. If not, it creates the database from a CSV file.
 
     :return: None
+
+    The function first checks if the SQLite database file specified by `Config.DB_FULL_PATH` exists.
+    If the file does not exist, it calls the `create_db_from_csv()` function to create the database and populate it with data from the CSV file.
+    If the file already exists, it prints a message indicating that the database has already been created.
+
+    Parameters:
+    None
+
+    Raises:
+    None
     """
     if not os.path.isfile(Config.DB_FULL_PATH):
         create_db_from_csv()
