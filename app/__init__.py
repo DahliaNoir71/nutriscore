@@ -1,7 +1,6 @@
 from flask import Flask
 from config import Config
 import app.modules.db_nutriscore as mod_db_nutriscore
-from app.modules.explore_data import load_dataframe
 
 def create_app():
     """
@@ -12,11 +11,11 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
+    # Initialize the loading status
+    app.config['loading_dataframe_status'] = {"complete": False}
+    
     # Initialize and bind the databases
     mod_db_nutriscore.set_db_nutriscore()
-
-    # Load dataframe from csv
-    app.config['PRODUCTS_DF'] = load_dataframe()
 
     # Import and register blueprints
     from app.modules.routes import main
