@@ -105,7 +105,8 @@ def training_data():
                            nutriscore_grades=nutriscore_grades, 
                            products=paginated_products, 
                            page=page, 
-                           total_pages=total_pages)
+                           total_pages=total_pages,
+                           total_products=total_products)
 
 # Search Route
 @main.route('/search', methods=['GET', 'POST'])
@@ -162,9 +163,10 @@ def search_results():
     start_index = (page - 1) * per_page
     end_index = start_index + per_page
     paginated_products = products.iloc[start_index:end_index].to_dict(orient='records')
-
+    
     return render_template('search_results.html', 
                            products=paginated_products, 
                            page=page, 
                            total_pages=total_pages,
-                           nutriscore_grades=nutriscore_grades)
+                           nutriscore_grades=nutriscore_grades,
+                           total_products=total_products)

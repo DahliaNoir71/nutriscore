@@ -3,7 +3,7 @@
 {% block title %}Search Results{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
+<div class="container-fluid big-content-block">
     <div class="row">
         <!-- Left Sidebar -->
         <div class="col-md-2 sidebar-container">
@@ -12,10 +12,10 @@
 
         <!-- Right Content Area -->
         <div class="col-md-10">
-            <h2 class="mt-4">Search Results</h2>
+            <h2 class="mt-4">Search Results</h2> ({{ total_products }} products)
 
             <!-- Pagination -->
-            {% include '_pagination.html' %}
+                {% include '_pagination.html' %}
 
             <!-- Check if there are any products to display -->
             {% if products %}
@@ -54,6 +54,9 @@
 </div>
 
 <style>
+    .big-content-block {
+        padding-top: 0px;
+    }
     .product-item {
         display: flex;
         align-items: center;
