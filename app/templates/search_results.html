@@ -14,6 +14,9 @@
         <div class="col-md-10">
             <h2 class="mt-4">Search Results</h2>
 
+            <!-- Pagination -->
+            {% include '_pagination.html' %}
+
             <!-- Check if there are any products to display -->
             {% if products %}
             <div class="product-list">
@@ -41,78 +44,8 @@
             </div>
 
             <!-- Pagination -->
-            <!-- Pagination -->
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                    <!-- Previous Page Link -->
-                    {% if page > 1 %}
-                        <li class="page-item">
-                            <a class="page-link"
-                            href="{{ url_for('main.search_results', page=page-1, 
-                                                search_term=request.args.get('search_term', ''), 
-                                                search_columns=request.args.getlist('search_columns'),
-                                                nutriscore_grades=request.args.getlist('nutriscore_grades'), 
-                                                countries=request.args.getlist('countries')) }}" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                    {% endif %}
+            {% include '_pagination.html' %}
 
-                    <!-- First Page Link -->
-                    {% if page > 3 %}
-                        <li class="page-item">
-                            <a class="page-link"
-                            href="{{ url_for('main.search_results', page=1, 
-                                                search_term=request.args.get('search_term', ''), 
-                                                search_columns=request.args.getlist('search_columns'),
-                                                nutriscore_grades=request.args.getlist('nutriscore_grades'), 
-                                                countries=request.args.getlist('countries')) }}">1</a>
-                        </li>
-                        <li class="page-item disabled"><span class="page-link">...</span></li>
-                    {% endif %}
-
-                    <!-- Page Numbers Around Current Page -->
-                    {% for p in range(page - 2, page + 3) %}
-                        {% if p > 0 and p <= total_pages %}
-                            <li class="page-item {% if p == page %}active{% endif %}">
-                                <a class="page-link"
-                                href="{{ url_for('main.search_results', page=p, 
-                                                    search_term=request.args.get('search_term', ''), 
-                                                    search_columns=request.args.getlist('search_columns'),
-                                                    nutriscore_grades=request.args.getlist('nutriscore_grades'), 
-                                                    countries=request.args.getlist('countries')) }}">{{ p }}</a>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
-
-                    <!-- Last Page Link -->
-                    {% if page < total_pages - 2 %}
-                        <li class="page-item disabled"><span class="page-link">...</span></li>
-                        <li class="page-item">
-                            <a class="page-link"
-                            href="{{ url_for('main.search_results', page=total_pages, 
-                                                search_term=request.args.get('search_term', ''), 
-                                                search_columns=request.args.getlist('search_columns'),
-                                                nutriscore_grades=request.args.getlist('nutriscore_grades'), 
-                                                countries=request.args.getlist('countries')) }}">{{ total_pages }}</a>
-                        </li>
-                    {% endif %}
-
-                    <!-- Next Page Link -->
-                    {% if page < total_pages %}
-                        <li class="page-item">
-                            <a class="page-link"
-                            href="{{ url_for('main.search_results', page=page+1, 
-                                                search_term=request.args.get('search_term', ''), 
-                                                search_columns=request.args.getlist('search_columns'),
-                                                nutriscore_grades=request.args.getlist('nutriscore_grades'), 
-                                                countries=request.args.getlist('countries')) }}" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </nav>
             {% else %}
                 <p>No products found matching your criteria.</p>
             {% endif %}

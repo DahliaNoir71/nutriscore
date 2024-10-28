@@ -149,6 +149,9 @@ def search_results():
             .apply(lambda row: row.astype(str).str.contains(search_term, case=False, na=False).any(), axis=1)
         ]
 
+    # Retrieve all unique Nutriscore grades for the sidebar
+    nutriscore_grades = sorted(products['nutriscore_grade'].dropna().unique())
+
     # Pagination parameters
     page = request.args.get('page', 1, type=int)
     per_page = 10
@@ -163,4 +166,5 @@ def search_results():
     return render_template('search_results.html', 
                            products=paginated_products, 
                            page=page, 
-                           total_pages=total_pages)
+                           total_pages=total_pages,
+                           nutriscore_grades=nutriscore_grades)

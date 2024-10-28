@@ -14,6 +14,10 @@
         <div class="col-md-10">
             <div class="content p-3">
                 <h2>Product List</h2>
+
+                <!-- Pagination -->
+                {% include '_pagination.html' %}
+                
                 <!-- Products Table -->
                 <div class="product-list">
                     {% for product in products %}
@@ -40,52 +44,8 @@
                 </div>
 
                 <!-- Pagination -->
-                <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center">
-                        <!-- Previous Page Link -->
-                        {% if page > 1 %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('main.training_data', page=page-1) }}" aria-label="Previous">
-                                    <span aria-hidden="true">&laquo;</span>
-                                </a>
-                            </li>
-                        {% endif %}
+                {% include '_pagination.html' %}
                 
-                        <!-- First Page Link -->
-                        {% if page > 3 %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('main.training_data', page=1) }}">1</a>
-                            </li>
-                            <li class="page-item disabled"><span class="page-link">...</span></li>
-                        {% endif %}
-                
-                        <!-- Page Numbers Around Current Page -->
-                        {% for p in range(page - 2, page + 3) %}
-                            {% if p > 0 and p <= total_pages %}
-                                <li class="page-item {% if p == page %}active{% endif %}">
-                                    <a class="page-link" href="{{ url_for('main.training_data', page=p) }}">{{ p }}</a>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-                
-                        <!-- Last Page Link -->
-                        {% if page < total_pages - 2 %}
-                            <li class="page-item disabled"><span class="page-link">...</span></li>
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('main.training_data', page=total_pages) }}">{{ total_pages }}</a>
-                            </li>
-                        {% endif %}
-                
-                        <!-- Next Page Link -->
-                        {% if page < total_pages %}
-                            <li class="page-item">
-                                <a class="page-link" href="{{ url_for('main.training_data', page=page+1) }}" aria-label="Next">
-                                    <span aria-hidden="true">&raquo;</span>
-                                </a>
-                            </li>
-                        {% endif %}
-                    </ul>
-                </nav>
             </div>
         </div>
     </div>
