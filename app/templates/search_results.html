@@ -21,15 +21,17 @@
             {% if products %}
             <div class="product-list">
                 {% for product in products %}
+                    <!-- Product Item -->
                     <div class="product-item">
                         <!-- Product Image -->
                         <div class="image-column" style="width: 150px; text-align: center;">
                             {% if product.image_url %}
-                            <img src="{{ product.image_url }}" alt="No Image" class="product-image">
+                                <img src="{{ product.image_url }}" alt="No Image" class="product-image">
                             {% else %}
-                            <img src="{{ url_for('static', filename='no-image.png') }}" alt="No Image Available" class="product-image">
+                                <img src="{{ url_for('static', filename='no-image.png') }}" alt="No Image Available" class="product-image">
                             {% endif %}
                         </div>
+
                         <!-- Product Information -->
                         <div class="product-info">
                             <h4 style="color: red;">{{ product.product_name }}</h4>
@@ -37,6 +39,11 @@
                             <p><strong>Code:</strong> {{ product.code }}</p>
                             <p><strong>Brands:</strong> {{ product.brands }}</p>
                             <p><strong>Nutriscore:</strong> {{ product.nutriscore_score }} ({{ product.nutriscore_grade }})</p>
+                        </div>
+
+                        <!-- Nutriscore Image -->
+                        <div class="nutriscore-image">
+                            <img src="{{ url_for('static', filename='nutriscore-' ~ product.nutriscore_grade ~ '-new-en.svg') }}" alt="Nutriscore" class="nutriscore-image">
                         </div>
                     </div>
                 {% endfor %}
@@ -68,14 +75,6 @@
         padding-right: 20px;
         padding-left: 0px;
     }
-    .product-item {
-        display: flex;
-        align-items: center;
-        border: 1px solid #ddd;
-        padding: 15px;
-        margin-bottom: 15px;
-        background-color: white;
-    }
     .product-image {
         max-height: 150px; /* Set maximum height */
         max-width: 150px;  /* Set maximum width */
@@ -91,6 +90,22 @@
     }
     .product-info p {
         margin: 0;
+    }
+    .product-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 15px;
+        background-color: white;
+    }
+    .nutriscore-image {
+        margin-left: auto; /* Pushes the Nutriscore image to the far right */
+    }
+    .nutriscore-image img {
+        max-width: 150px; /* Adjust width as needed */
+        height: auto; /* Maintain aspect ratio */
     }
 </style>
 {% endblock %}
