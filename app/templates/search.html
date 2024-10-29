@@ -35,7 +35,9 @@
                 <div class="form-group">
                     <label>Nutriscore Grades</label><br>
                     {% for grade in nutriscore_grades %}
-                        <input type="checkbox" name="nutriscore_grades" value="{{ grade }}" checked> {{ grade }}<br>
+                        <input type="checkbox" name="nutriscore_grades" value="{{ grade }}" 
+                               {% if grade in request.args.getlist('nutriscore_grades') %} checked {% endif %}> 
+                        {{ grade }}<br>
                     {% endfor %}
                 </div>
             
