@@ -3,7 +3,7 @@
 {% block title %}Nutriscore Prediction Form{% endblock %}
 
 {% block content %}
-    <div class="container style="padding-top: 20px;">
+    <div class="container">
         <h1 class="text-center mb-4">Nutriscore AI Prediction Form</h1>
         <form method="POST" action="{{ url_for('main.predict') }}">
             <div class="row justify-content-center">
@@ -74,4 +74,10 @@
             </div>
         </form>
     </div>
+
+    <style>
+        .container{
+            padding-top: 40px;
+        }
+    </style>
 {% endblock %}
