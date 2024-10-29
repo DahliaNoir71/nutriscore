@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Search Products{% endblock %}
+
+{% block content %}
+<div class="container-fluid big-content-block">
+    <div class="row">
+        <!-- Left Sidebar -->
+        <div class="col-md-2 sidebar-container">
+            {% include '_sidebar.html' %}
+        </div>
+
+        <!-- Right Content Area -->
+        <div class="col-md-10">
+            <h2 class="mt-4">Search Products</h2>
+            <form method="GET" action="{{ url_for('main.search_results') }}">
+                <!-- Search Bar with Column Checkboxes -->
+                <div class="form-group">
+                    <label for="search-term">Search</label>
+                    <input type="text" class="form-control" id="search-term" name="search_term" placeholder="Enter a search term">
+                    <div class="mt-2">
+                        <label>Search in:</label><br>
+                        <input type="checkbox" name="search_columns" value="product_name" checked> Product Name<br>
+                        <input type="checkbox" name="search_columns" value="brands"> Brands<br>
+                        <input type="checkbox" name="search_columns" value="categories"> Categories<br>
+                    </div>
+                </div>
+            
+                <!-- Nutriscore Grade Checkboxes -->
+                <div class="form-group">
+                    <label>Nutriscore Grades</label><br>
+                    {% for grade in nutriscore_grades %}
+                        <input type="checkbox" name="nutriscore_grades" value="{{ grade }}" checked> {{ grade }}<br>
+                    {% endfor %}
+                </div>
+            
+                <!-- Country Checkboxes -->
+                <div class="form-group">
+                    <label>Countries</label><br>
+                    <button type="button" onclick="checkAllCountries(true)">Check All</button>
+                    <button type="button" onclick="checkAllCountries(false)">Uncheck All</button>
+                    <div class="mt-2">
+                        {% for country in countries %}
+                            <input type="checkbox" name="countries" value="{{ country }}" 
+                                   {% if country == 'France' %} checked {% endif %}> 
+                            {{ country }}<br>
+                        {% endfor %}
+                    </div>
+                </div>
+            
+                <button type="submit" class="btn btn-primary">Search</button>
+            </form>            
+        </div>
+    </div>
+</div>
+
+<style>
+    .big-content-block {
+        padding-top: 0px;
+    }
+</style>
+
+<!-- JavaScript for Check All/Uncheck All functionality -->
+<script>
+    function checkAllCountries(check) {
+        let checkboxes = document.getElementsByName('countries');
+        for (let i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = check;
+        }
+    }
+</script>
+{% endblock %}
