@@ -84,9 +84,6 @@ def training_data():
     # Retrieve the products DataFrame from the app config
     products = current_app.config['PRODUCTS_DF']
 
-    # Ensure 'country_clean' is a list in each product
-    products['country_clean'] = products['country_clean'].apply(lambda x: eval(x) if isinstance(x, str) else x)
-
     # Pagination parameters
     page = request.args.get('page', 1, type=int)  # Get the current page, default is 1
     per_page = 10  # Number of products to show per page
@@ -117,13 +114,8 @@ def search():
     # Extract unique Nutriscore grades, sorted alphabetically
     nutriscore_grades = sorted(products['nutriscore_grade'].dropna().unique())
 
-    # Extract unique countries, ordered by frequency of occurrence
-    country_counts = products['country_clean'].explode().value_counts()
-    countries = country_counts.index.tolist()
-
     return render_template('search.html',
-                           nutriscore_grades=nutriscore_grades,
-                           countries=countries)
+                           nutriscore_grades=nutriscore_grades)
 
 @main.route('/search_results', methods=['GET'])
 def search_results():
@@ -134,15 +126,11 @@ def search_results():
     search_term = request.args.get('search_term', '').strip().lower()
     search_columns = request.args.getlist('search_columns')
     selected_grades = request.args.getlist('nutriscore_grades')
-    selected_countries = request.args.getlist('countries')
 
     # Apply filters based on the retrieved parameters
     if selected_grades:
         products = products[products['nutriscore_grade'].isin(selected_grades)]
     
-    if selected_countries:
-        products = products[products['country_clean'].apply(lambda x: any(country in x for country in selected_countries))]
-
     if search_term and search_columns:
         search_columns = [col for col in search_columns if col in products.columns]
         products = products[

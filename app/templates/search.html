@@ -40,20 +40,6 @@
                         {{ grade }}<br>
                     {% endfor %}
                 </div>
-            
-                <!-- Country Checkboxes -->
-                <div class="form-group">
-                    <label>Countries</label><br>
-                    <button type="button" onclick="checkAllCountries(true)">Check All</button>
-                    <button type="button" onclick="checkAllCountries(false)">Uncheck All</button>
-                    <div class="mt-2">
-                        {% for country in countries %}
-                            <input type="checkbox" name="countries" value="{{ country }}" 
-                                   {% if country == 'France' %} checked {% endif %}> 
-                            {{ country }}<br>
-                        {% endfor %}
-                    </div>
-                </div>
                 
                 <div class="form-button">
                     <!-- Submit Button -->
