@@ -11,7 +11,7 @@
         </div>
 
         <!-- Right Content Area -->
-        <div class="col-md-10">
+        <div class="col-md-10 main-content">
             <h2 class="mt-4">Search Results</h2> ({{ total_products }} products)
 
             <!-- Pagination -->
@@ -54,8 +54,20 @@
 </div>
 
 <style>
+    .row {
+        padding: 0px;
+        margin: 0px;
+    }
+    .sidebar-container {
+        padding-right: 0px;
+        padding-left: 0px;
+    }
     .big-content-block {
         padding-top: 0px;
+    }
+    .main-content {
+        padding-right: 20px;
+        padding-left: 0px;
     }
     .product-item {
         display: flex;

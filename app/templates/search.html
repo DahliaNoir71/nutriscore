@@ -11,7 +11,7 @@
         </div>
 
         <!-- Right Content Area -->
-        <div class="col-md-10">
+        <div class="col-md-10 main-content">
             <h2 class="mt-4">Search Products</h2>
             <form method="GET" action="{{ url_for('main.search_results') }}">
                 <!-- Search Bar with Column Checkboxes -->
@@ -25,12 +25,19 @@
                         <input type="checkbox" name="search_columns" value="categories"> Categories<br>
                     </div>
                 </div>
-            
+                
+                <div class="form-button">
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+
                 <!-- Nutriscore Grade Checkboxes -->
                 <div class="form-group">
                     <label>Nutriscore Grades</label><br>
                     {% for grade in nutriscore_grades %}
-                        <input type="checkbox" name="nutriscore_grades" value="{{ grade }}" checked> {{ grade }}<br>
+                        <input type="checkbox" name="nutriscore_grades" value="{{ grade }}" 
+                               {% if grade in request.args.getlist('nutriscore_grades') %} checked {% endif %}> 
+                        {{ grade }}<br>
                     {% endfor %}
                 </div>
             
@@ -47,16 +54,34 @@
                         {% endfor %}
                     </div>
                 </div>
-            
-                <button type="submit" class="btn btn-primary">Search</button>
+                
+                <div class="form-button">
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
             </form>            
         </div>
     </div>
 </div>
 
 <style>
+    .row {
+        padding: 0px;
+        margin: 0px;
+    }
+    .sidebar-container {
+        padding-right: 0px;
+        padding-left: 0px;
+    }
     .big-content-block {
         padding-top: 0px;
+    }
+    .main-content {
+        padding-right: 20px;
+        padding-left: 0px;
+    }
+    .form-button {
+        text-align: right;
     }
 </style>
 
