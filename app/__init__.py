@@ -15,7 +15,7 @@ def create_app():
     app.config['loading_dataframe_status'] = {"complete": False}
     
     # Initialize and bind the databases
-    mod_db_nutriscore.set_db_nutriscore()
+    #mod_db_nutriscore.set_db_nutriscore()
 
     # Import and register blueprints
     from app.modules.routes import main
