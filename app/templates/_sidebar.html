@@ -2,14 +2,34 @@
     <form method="POST" action="{{ url_for('main.search') }}">
         <button type="submit" class="btn btn-primary mb-3 w-100">Search Data</button>
     </form>
-    <h2>Nutriscore</h2>
+    <h2>Categories</h2>
     <ul class="list-group sidebar-list">
-        <!-- List of Nutriscore Grades (will be dynamically generated) -->
-        {% for grade in nutriscore_grades %}
+        <!-- List of categories (will be dynamically generated) -->
+        {% for cat in cat_list %}
             <li class="list-group-item">
-                <a href="{{ url_for('main.search_results', nutriscore_grades=grade) }}" class="text-decoration-none">{{ grade }}</a>
+                <a href="{{ url_for('main.search_results', pnns_groups_1=cat, submitted='true') }}" class="text-decoration-none">{{ cat }}</a>
             </li>
         {% endfor %}
+    </ul>
+
+    <br><h2>Nutriscore</h2>
+    <ul class="list-group sidebar-list">
+        <!-- List of Nutriscore Grades -->
+        <li class="list-group-item">
+            <a href="{{ url_for('main.search_results', nutriscore_grades='a', submitted='true') }}" class="text-decoration-none">Grade A</a>
+        </li>
+        <li class="list-group-item">
+            <a href="{{ url_for('main.search_results', nutriscore_grades='b', submitted='true') }}" class="text-decoration-none">Grade B</a>
+        </li>
+        <li class="list-group-item">
+            <a href="{{ url_for('main.search_results', nutriscore_grades='c', submitted='true') }}" class="text-decoration-none">Grade C</a>
+        </li>
+        <li class="list-group-item">
+            <a href="{{ url_for('main.search_results', nutriscore_grades='d', submitted='true') }}" class="text-decoration-none">Grade D</a>
+        </li>
+        <li class="list-group-item">
+            <a href="{{ url_for('main.search_results', nutriscore_grades='e', submitted='true') }}" class="text-decoration-none">Grade E</a>
+        </li>
     </ul>
 </div>
 
