@@ -86,7 +86,7 @@ def training_data():
 
     # Pagination parameters
     page = request.args.get('page', 1, type=int)  # Get the current page, default is 1
-    per_page = 10  # Number of products to show per page
+    per_page = 50  # Number of products to show per page
 
     # Calculate total pages
     total_products = len(products)
@@ -98,8 +98,12 @@ def training_data():
     paginated_products = products.iloc[start_index:end_index].to_dict(orient='records')
 
     nutriscore_grades = sorted(products['nutriscore_grade'].dropna().unique())  # Extract unique values and sort alphabetically
+
+    cat_list = sorted(products['pnns_groups_1'].dropna().unique())  # Extract unique values and sort alphabetically
+
     return render_template('training_data.html',
-                           nutriscore_grades=nutriscore_grades, 
+                           nutriscore_grades=nutriscore_grades,
+                           cat_list=cat_list,
                            products=paginated_products, 
                            page=page, 
                            total_pages=total_pages,
@@ -114,46 +118,71 @@ def search():
     # Extract unique Nutriscore grades, sorted alphabetically
     nutriscore_grades = sorted(products['nutriscore_grade'].dropna().unique())
 
+    # Retrieve all unique Categories for the sidebar
+    cat_list = sorted(products['pnns_groups_1'].dropna().unique())
+
     return render_template('search.html',
-                           nutriscore_grades=nutriscore_grades)
+                           nutriscore_grades=nutriscore_grades,
+                           cat_list=cat_list)
 
 @main.route('/search_results', methods=['GET'])
 def search_results():
     # Get the DataFrame from the app config
     products = current_app.config['PRODUCTS_DF']
 
-    # Retrieve search parameters from GET request
-    search_term = request.args.get('search_term', '').strip().lower()
-    search_columns = request.args.getlist('search_columns')
-    selected_grades = request.args.getlist('nutriscore_grades')
+    # Check if the form was explicitly submitted
+    form_submitted = request.args.get('submitted', '') == 'true'
 
-    # Apply filters based on the retrieved parameters
-    if selected_grades:
-        products = products[products['nutriscore_grade'].isin(selected_grades)]
-    
-    if search_term and search_columns:
-        search_columns = [col for col in search_columns if col in products.columns]
-        products = products[
-            products[search_columns]
-            .apply(lambda row: row.astype(str).str.contains(search_term, case=False, na=False).any(), axis=1)
-        ]
+    if form_submitted:
+        # Perform a new search based on the form parameters
+        search_results = products
+
+        # Retrieve search parameters from GET request
+        search_term = request.args.get('search_term', '').strip().lower()
+        search_columns = request.args.getlist('search_columns')
+        selected_grades = request.args.getlist('nutriscore_grades')
+        pnns_groups_1 = request.args.getlist('pnns_groups_1')
+
+        # Apply filters based on the retrieved parameters
+        if selected_grades:
+            search_results = search_results[search_results['nutriscore_grade'].isin(selected_grades)]
+        
+        if pnns_groups_1:
+            search_results = search_results[search_results['pnns_groups_1'].isin(pnns_groups_1)]
+
+        if search_term and search_columns:
+            search_columns = [col for col in search_columns if col in search_results.columns]
+            search_results = search_results[
+                search_results[search_columns]
+                .apply(lambda row: row.astype(str).str.contains(search_term, case=False, na=False).any(), axis=1)
+            ]
+
+        # Save the filtered results to the app config
+        current_app.config['SEARCH_RESULTS_DF'] = search_results
+    else:
+        # Use the existing search results if no new search was performed
+        search_results = current_app.config.get('SEARCH_RESULTS_DF', products)
 
     # Retrieve all unique Nutriscore grades for the sidebar
     nutriscore_grades = sorted(products['nutriscore_grade'].dropna().unique())
 
+    # Retrieve all unique Categories for the sidebar
+    cat_list = sorted(products['pnns_groups_1'].dropna().unique())
+
     # Pagination parameters
     page = request.args.get('page', 1, type=int)
-    per_page = 10
-    total_products = len(products)
+    per_page = 50
+    total_products = len(search_results)
     total_pages = math.ceil(total_products / per_page)
 
     # Paginate the DataFrame
     start_index = (page - 1) * per_page
     end_index = start_index + per_page
-    paginated_products = products.iloc[start_index:end_index].to_dict(orient='records')
-    
+    paginated_products = search_results.iloc[start_index:end_index].to_dict(orient='records')
+
     return render_template('search_results.html', 
-                           products=paginated_products, 
+                           products=paginated_products,
+                           cat_list=cat_list,
                            page=page, 
                            total_pages=total_pages,
                            nutriscore_grades=nutriscore_grades,
