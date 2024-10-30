@@ -17,7 +17,7 @@ def read_csv_chunks(file_path, selected_columns, chunk_size):
     selected_chunks = []
 
     # Lire le fichier CSV en chunks avec une barre de progression
-    if selected_columns != []:
+    if selected_columns:
         chunk_iter = pd.read_csv(file_path,
                                 sep="\t",
                                 low_memory=False,
@@ -108,5 +108,5 @@ def read_and_clean_csv():
 
     print("\nFin de script clean_csv")
 
-if __name__ == '__main__':
-   read_and_clean_csv()
+# if __name__ == '__main__':
+#    read_and_clean_csv()

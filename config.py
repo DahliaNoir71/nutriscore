@@ -52,7 +52,6 @@ class Config:
     TABLE_NAME = "produits"
     ORIGINAL_CSV_NAME = "en.openfoodfacts.org.products.csv"
     CLEANED_CSV_NAME = "openfoodfact_clean.csv"
-    CLEANED_100G_CSV_NAME = "100g_clean.csv"
     ORIGINAL_CSV_FULL_PATH = APP_STATIC_PATH + ORIGINAL_CSV_NAME
     CLEANED_CSV_FULL_PATH = APP_STATIC_PATH + CLEANED_CSV_NAME
     CHUNK_SIZE = 10000
@@ -100,19 +99,20 @@ class Config:
         "energy-kcal_100g",
         "fat_100g",
         "saturated-fat_100g",
-        "omega-3-fat_100g",
-        "omega-6-fat_100g",
         "sugars_100g",
-        "added-sugars_100g",
         "fiber_100g",
         "proteins_100g",
         "salt_100g",
+        "sodium_100g",
         "fruits-vegetables-nuts-estimate-from-ingredients_100g",
-        "nutriscore_score",
+        "nutriscore_grade",
     ]
     DIRECTORY_PATH = "../static/"
-    OUTPUT_NAME = 'openfoodfact_clean.csv'
     NUTRI_OK = ["a", "b", "c", "d", "e"]
     COUNTRIES_EN_COL = "countries_en"
     COUNTRIES_EN_API_URL = "https://restcountries.com/v3.1/all"
     UNKNOWN_STR = "Unknown"
+    COL_PREDICTION = "nutriscore_grade"
+    MAX_ITERATIONS = 1000
+    AVERAGE = 'weighted'
+    SOLVER = "saga"
