@@ -1,8 +1,7 @@
 import os
-
 import requests
-from tqdm import tqdm
 
+from tqdm import tqdm
 from config import Config
 
 
@@ -43,24 +42,24 @@ def clean_countries(dataframe, column_name):
     :param column_name: The specific column in the DataFrame to be cleaned.
     :return: The cleaned DataFrame with country names processed to ensure consistency and validity.
     """
-    # Divide and explode to get each country as a separate row
+    # Divise et explode pour obtenir chaque pays comme une ligne séparée
     dataframe[column_name] = dataframe[column_name].str.split(',')
     dataframe = dataframe.explode(column_name)
-    # Clean extra spaces and normalize to lowercase
+    # Nettoie les espaces supplémentaires et normalise en minuscules
     dataframe[column_name] = dataframe[column_name].str.strip().str.lower()
-    # Get the list of country names in English
+    # Obtenez la liste des noms de pays en anglais
     countries_en_names = {country.lower(): country for country in fetch_countries_en()}
-    # Apply cleaning with a progress bar
-    with tqdm(total=len(dataframe), desc="Cleaning countries", unit='country') as progress_bar:
-        dataframe[column_name] = dataframe[column_name].progress_apply(
-            lambda x: countries_en_names.get(x, Config.UNKNOWN_STR)
-        )
-        # Handle NaN values by filling with UNKNOWN_STR
-        dataframe[column_name] = dataframe[column_name].fillna(Config.UNKNOWN_STR)
-        # Update the progress bar
-        progress_bar.update(len(dataframe))
+    # Applique le nettoyage avec une barre de progression
+    tqdm.pandas(desc="Nettoyage des pays")
+    dataframe[column_name] = dataframe[column_name].progress_apply(
+        lambda x: countries_en_names.get(x, Config.UNKNOWN_STR)
+    )
+    # Gère les valeurs NaN en remplissant avec UNKNOWN_STR
+    dataframe[column_name] = dataframe[column_name].fillna(Config.UNKNOWN_STR)
+    # Filter the dataframe to keep only rows where the column contains the word 'France'
+    dataframe = dataframe[dataframe[column_name].str.contains('France', na=False)]
 
-    # Save the cleaned data to a CSV file
+    # Enregistre les données nettoyées dans un fichier CSV
     output_path = os.path.join(Config.DIRECTORY_PATH, f"{column_name}.csv")
     dataframe[column_name].to_csv(output_path, index=False)
 
