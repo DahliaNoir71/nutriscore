@@ -110,6 +110,19 @@ class Config:
         "fruits-vegetables-nuts-estimate-from-ingredients_100g",
         "nutriscore_score",
     ]
+    COLS_FOR_MODEL = [
+        "pnns_groups_1",
+        "energy-kcal_100g",
+        "fat_100g",
+        "saturated-fat_100g",
+        "sugars_100g",
+        "proteins_100g",
+        "sodium_100g",
+        "salt_100g",
+        "fiber_100g",
+        "fruits-vegetables-nuts-estimate-from-ingredients_100g",
+        "nutriscore_grade"
+    ]
     DIRECTORY_PATH = "../static/"
     OUTPUT_NAME = 'openfoodfact_clean.csv'
     NUTRI_OK = ["a", "b", "c", "d", "e"]
