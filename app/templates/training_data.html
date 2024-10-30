@@ -35,15 +35,18 @@
                             <!-- Product Information -->
                             <div class="product-info">
                                 <h4 style="color: red;">{{ product.product_name }}</h4>
+                                <p><strong style="color: royalblue;">{{ product.pnns_groups_1 }}</strong> - {{ product.pnns_groups_2 }}</p>
                                 <p><strong>Quantity:</strong> {{ product.quantity }}</p>
                                 <p><strong>Code:</strong> {{ product.code }}</p>
                                 <p><strong>Brands:</strong> {{ product.brands }}</p>
-                                <p><strong>Nutriscore:</strong> {{ product.nutriscore_score }} ({{ product.nutriscore_grade }})</p>
                             </div>
 
                             <!-- Nutriscore Image -->
                             <div class="nutriscore-image">
-                                <img src="{{ url_for('static', filename='nutriscore-' ~ product.nutriscore_grade ~ '-new-en.svg') }}" alt="Nutriscore" class="nutriscore-image">
+                                <a href="{{ product.url }}" target="_blank" style="color: black;">
+                                    <img src="{{ url_for('static', filename='nutriscore-' ~ product.nutriscore_grade ~ '-new-en.svg') }}" alt="Nutriscore" class="nutriscore-image">
+                                    <p><strong>Nutriscore:</strong> {{ product.nutriscore_score | int }}</p>
+                                </a>
                             </div>
                         </div>
                     {% endfor %}
@@ -104,6 +107,8 @@
     }
     .nutriscore-image {
         margin-left: auto; /* Pushes the Nutriscore image to the far right */
+        width: 200px;
+        text-align: center;
     }
     .nutriscore-image img {
         max-width: 150px; /* Adjust width as needed */

@@ -12,32 +12,30 @@
 
         <!-- Right Content Area -->
         <div class="col-md-10 main-content">
-            <h2 class="mt-4">Search Products</h2>
+            <h2 class="mt-4">Search Products</h2><br>
             <form method="GET" action="{{ url_for('main.search_results') }}">
                 <!-- Search Bar with Column Checkboxes -->
                 <div class="form-group">
                     <label for="search-term">Search</label>
+
+                    <!-- Hidden Input for Submission -->
+                    <input type="hidden" name="submitted" value="true">
+                    
                     <input type="text" class="form-control" id="search-term" name="search_term" placeholder="Enter a search term">
                     <div class="mt-2">
-                        <label>Search in:</label><br>
+                        <br><label><b>Search in:</b></label><br>
                         <input type="checkbox" name="search_columns" value="product_name" checked> Product Name<br>
                         <input type="checkbox" name="search_columns" value="brands"> Brands<br>
                         <input type="checkbox" name="search_columns" value="categories"> Categories<br>
                     </div>
                 </div>
-                
-                <div class="form-button">
-                    <!-- Submit Button -->
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </div>
 
                 <!-- Nutriscore Grade Checkboxes -->
                 <div class="form-group">
-                    <label>Nutriscore Grades</label><br>
+                    <br><label><b>Nutriscore Grades</b></label><br>
                     {% for grade in nutriscore_grades %}
-                        <input type="checkbox" name="nutriscore_grades" value="{{ grade }}" 
-                               {% if grade in request.args.getlist('nutriscore_grades') %} checked {% endif %}> 
-                        {{ grade }}<br>
+                        <input type="checkbox" name="nutriscore_grades" value="{{ grade }}" checked }> 
+                        Grade {{ grade | upper }}<br>
                     {% endfor %}
                 </div>
                 
@@ -65,9 +63,14 @@
     .main-content {
         padding-right: 20px;
         padding-left: 0px;
+        text-align: center;
+    }
+    .form-group {
+        padding-left: 400px;
+        padding-right: 400px;
     }
     .form-button {
-        text-align: right;
+        text-align: center;
     }
 </style>
 

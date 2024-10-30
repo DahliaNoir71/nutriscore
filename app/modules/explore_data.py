@@ -33,6 +33,7 @@ def load_dataframe():
         # Save DF in app config within the app context
         with current_app.app_context():
             current_app.config['PRODUCTS_DF'] = products
+            current_app.config['SEARCH_RESULTS_DF'] = products
             current_app.config['loading_dataframe_status']['complete'] = True
             logging.debug("Data loading completed and status set to True.")
 
