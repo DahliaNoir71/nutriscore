@@ -103,8 +103,7 @@ class Config:
         "fiber_100g",
         "proteins_100g",
         "salt_100g",
-        "sodium_100g",
-        "fruits-vegetables-nuts-estimate-from-ingredients_100g",
+        "carbohydrates_100g",
         "nutriscore_grade",
     ]
     DIRECTORY_PATH = "../static/"
