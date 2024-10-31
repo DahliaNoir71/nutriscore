@@ -116,10 +116,10 @@ class Config:
         "fat_100g",
         "saturated-fat_100g",
         "sugars_100g",
-        "proteins_100g",
-        "sodium_100g",
-        "salt_100g",
         "fiber_100g",
+        "proteins_100g",
+        "salt_100g",
+        "sodium_100g",
         "fruits-vegetables-nuts-estimate-from-ingredients_100g",
         "nutriscore_grade"
     ]

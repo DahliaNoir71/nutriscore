@@ -34,9 +34,9 @@ def train_model(df, label_encoder_pnns, ordinal_encoder_grade):
     y = df['nutriscore_grade'].ravel()  # Convert target to 1D array
 
     # Print detailed information about the training DataFrame columns
-    print("Training DataFrame Info:")
+    print("\033[94mTraining DataFrame Info:\033[0m")
     print(X.info())
-    print("Training DataFrame Head:")
+    print("\033[94mTraining DataFrame Head:\033[0m")
     print(X.head())
 
     # Split the dataset into training and testing sets
@@ -53,8 +53,8 @@ def train_model(df, label_encoder_pnns, ordinal_encoder_grade):
 
     # Evaluate the model
     y_pred = model.predict(X_test_scaled)
-    print("Model Accuracy: ", accuracy_score(y_test, y_pred))
-    print("Classification Report:\n", classification_report(y_test, y_pred))
+    print("\033[94mModel Accuracy:\033[0m ", accuracy_score(y_test, y_pred))
+    print("\033[94mClassification Report:\033[0m\n", classification_report(y_test, y_pred))
 
     # Save the model, encoders, and scaler in 'app/ai-model'
     save_model_and_encoders(model, scaler, label_encoder_pnns, ordinal_encoder_grade)

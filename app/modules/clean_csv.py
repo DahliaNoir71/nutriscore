@@ -12,7 +12,7 @@ def read_csv_chunks(file_path, selected_columns, chunk_size):
     :param chunk_size: The number of rows per chunk to be read from the CSV file.
     :return: A list of DataFrame chunks, each containing the selected columns from the CSV file.
     """
-    print("read_csv_chunks")
+    print("\033[94mread_csv_chunks\033[0m")
     # Initialisation de la liste pour stocker les morceaux sélectionnés
     selected_chunks = []
 
@@ -54,7 +54,7 @@ def filter_and_clean_data(dataframes, selected_columns, cols_stat, nutri_ok):
     :return: Concatenated and cleaned DataFrame comprising only the specified columns and filtered by acceptable 'nutriscore_grade' values.
     """
 
-    print("\nfilter_and_clean_data")
+    print("\n\033[94mfilter_and_clean_data\033[0m")
 
     # Filter rows where 'nutriscore_score' and 'nutriscore_grade' are not missing, and select specified columns
     list_df_not_na = [
@@ -84,7 +84,7 @@ def read_and_clean_csv():
     :return: None
     """
 
-    print("\nDébut de script clean_csv")
+    print("\n\033[94mDébut de script clean_csv\033[0m")
 
     # Define the path to the original CSV file using configuration settings
     file_path = Config.DIRECTORY_PATH + Config.ORIGINAL_CSV_NAME
@@ -106,7 +106,7 @@ def read_and_clean_csv():
     # Save the cleaned DataFrame to a new CSV file with tab-separated values and without the index column
     clean_data.to_csv(cleaned_file_path, sep='\t', index=False)
 
-    print("\nFin de script clean_csv")
+    print("\n\033[94mFin de script clean_csv\033[0m")
 
 if __name__ == '__main__':
    read_and_clean_csv()

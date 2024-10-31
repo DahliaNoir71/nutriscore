@@ -4,7 +4,17 @@
 
 {% block content %}
     <div class="container">
-        <h1 class="text-center mb-4">Nutriscore AI Prediction Form</h1>
+        <!-- Result Section -->
+        {% if predicted_score %}
+            <br><h1 class="text-center mb-4">Predicted Nutri-Grade <span class="predicted-score"></span></h1>
+            <div class="result-section mt-4 text-center">
+                <img src="{{ url_for('static', filename='nutriscore-' ~ predicted_score ~ '-new-en.svg') }}" alt="Nutri-Grade Label" class="nutriscore-image"> <br><br>
+                <!-- <img src="{{ url_for('static', filename='nutriscore-a-new-en.svg') }}" alt="Nutriscore" class="nutriscore-image"> -->
+            </div>
+        {% endif %}
+
+        <!-- Prediction Form -->
+        <br><h1 class="text-center mb-4">Nutriscore AI Prediction Form</h1>
         <form method="POST" action="{{ url_for('main.predict') }}">
             {{ form.hidden_tag() }}
             <div class="row justify-content-center">
@@ -78,18 +88,11 @@
                 <button type="submit" style="background-color: #4CAF50; color: white; border: none; padding: 10px 20px; font-size: 16px; margin-top: 20px; cursor: pointer; border-radius: 5px;">Predict</button>
             </div>
         </form>
-
-        {% if predicted_score %}
-            <div class="result-section mt-4 text-center">
-                <h2>Predicted Nutri-Score: <span class="predicted-score">{{ predicted_score }}</span></h2>
-            </div>
-        {% endif %}
-
     </div>
 
     <style>
         .container {
-            padding-top: 40px;
+            padding-top: 0px;
         }
     </style>
 {% endblock %}

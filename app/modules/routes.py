@@ -93,54 +93,58 @@ def predict():
 
     if form.validate_on_submit():
         try:
-            # Collect form data into a DataFrame with the same columns as the model expects
+            # Collect form data into a DataFrame
             input_data = {
                 "pnns_groups_1": label_encoder.transform([form.pnns_groups_1.data])[0],
                 "energy-kcal_100g": float(form.energy_kcal_100g.data),
                 "fat_100g": float(form.fat_100g.data),
                 "saturated-fat_100g": float(form.saturated_fat_100g.data),
                 "sugars_100g": float(form.sugars_100g.data),
-                "proteins_100g": float(form.proteins_100g.data),
-                "sodium_100g": float(form.sodium_100g.data),
-                "salt_100g": float(form.salt_100g.data),
                 "fiber_100g": float(form.fiber_100g.data),
+                "proteins_100g": float(form.proteins_100g.data),
+                "salt_100g": float(form.salt_100g.data),
+                "sodium_100g": float(form.sodium_100g.data),
                 "fruits-vegetables-nuts-estimate-from-ingredients_100g": float(form.fruits_vegetables_nuts_estimate_from_ingredients_100g.data),
             }
 
-            # Ensure the input DataFrame has the exact columns in order as in training
+            # Ensure the input DataFrame columns align exactly with training
             input_df = pd.DataFrame([input_data])[Config.COLS_FOR_MODEL[:-1]]
 
-            # Convert all columns to the correct data types as used during training
+            # Cast to appropriate data types to match training
             input_df = input_df.astype({
                 "pnns_groups_1": 'int64',
                 "energy-kcal_100g": 'float64',
                 "fat_100g": 'float64',
                 "saturated-fat_100g": 'float64',
                 "sugars_100g": 'float64',
-                "proteins_100g": 'float64',
-                "sodium_100g": 'float64',
-                "salt_100g": 'float64',
                 "fiber_100g": 'float64',
+                "proteins_100g": 'float64',
+                "salt_100g": 'float64',
+                "sodium_100g": 'float64',
                 "fruits-vegetables-nuts-estimate-from-ingredients_100g": 'float64',
             })
 
-            # Print detailed information about the prediction DataFrame columns
-            print("Prediction DataFrame Info:")
-            print(input_df.info())
-            print("Prediction DataFrame Head:")
-            print(input_df.head())
-            print(input_df)
+            # Debugging - Print Column Details
+            print("\033[94mColumn names in prediction DataFrame:\033[0m", input_df.columns.tolist())
+            print("\033[94mData types in prediction DataFrame:\033[0m", input_df.dtypes)
+
             # Normalize the input data
             input_scaled = scaler.transform(input_df)
+
+            # Print normalized data for confirmation
+            print("\033[94mNormalized Input Data:\033[0m")
             print(input_scaled)
+
             # Predict the Nutri-Score
             prediction = model.predict(input_scaled)
-
-            # Decode the predicted label
             nutriscore_grade = ordinal_encoder.inverse_transform(prediction.reshape(-1, 1))[0][0]
             predicted_score = nutriscore_grade
+
+            # Print predicted score
+            print("\033[94mPredicted Nutri-Grade:\033[0m", predicted_score)
         except Exception as e:
-            print(f"Error during prediction: {e}")
+            # Print error in red
+            print(f"\033[91mError during prediction:\033[0m {e}")
             predicted_score = "Error"
 
     return render_template('prediction_form.html', form=form, pnns_groups_list=pnns_groups_list, predicted_score=predicted_score)
