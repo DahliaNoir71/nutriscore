@@ -57,10 +57,6 @@ def clean_countries(dataframe, column_name):
     # Gère les valeurs NaN en remplissant avec UNKNOWN_STR
     dataframe[column_name] = dataframe[column_name].fillna(Config.UNKNOWN_STR)
     # Filter the dataframe to keep only rows where the column contains the word 'France'
-    dataframe = dataframe[dataframe[column_name].str.contains('France', na=False)]
-
-    # Enregistre les données nettoyées dans un fichier CSV
-    output_path = os.path.join(Config.DIRECTORY_PATH, f"{column_name}.csv")
-    dataframe[column_name].to_csv(output_path, index=False)
+    dataframe = dataframe[dataframe[column_name].str.contains('France', na=False)]#
 
     return dataframe
