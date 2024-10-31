@@ -1,3 +1,7 @@
+import os
+
+import joblib
+import numpy as np
 import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
@@ -10,7 +14,7 @@ from sklearn.metrics import (accuracy_score,
                              roc_auc_score,
                              classification_report,
                              roc_curve, auc)
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler, label_binarize
 
 from app.modules.clean_csv import read_csv_chunks
@@ -37,6 +41,20 @@ def load_data(csv_path, cols, chunk_size):
     df = pd.concat(chunks, ignore_index=True)
     return df
 
+def save_df_test(df_test):
+    # Créer le répertoire s'il n'existe pas
+    os.makedirs('tests', exist_ok=True)
+    # Ensuite, sauvegarder le modèle et le scaler dans ce répertoire
+    joblib.dump(df_test, 'tests/df_test_nutriscore.pkl')
+    print("df_test sauvegardé avec succès.")
+
+
+def split_data_for_test(df, test_size):
+    df_test = df.sample(frac=test_size, random_state=1)  # Premier échantillon
+    df = df.drop(df_test.index)  # Deuxième partie avec les lignes restantes
+    save_df_test(df_test)
+    return df
+
 
 def preprocess_data(df, prediction_column):
     """
@@ -56,6 +74,39 @@ def preprocess_data(df, prediction_column):
     x = df.drop(prediction_column, axis=1)  # Features are all columns except the prediction column
     y = df[prediction_column]  # Target is the prediction column
     return x, y
+
+
+def cross_validate_model(model, x, y, k=5, scoring='accuracy'):
+    """
+    Effectue une validation croisée sur le modèle spécifié.
+
+    Paramètres :
+    - model : le modèle ML à entraîner.
+    - X : caractéristiques (features).
+    - y : étiquettes (labels).
+    - k : nombre de folds pour la cross-validation (par défaut 5).
+    - scoring : métrique de scoring pour évaluer le modèle (par défaut 'accuracy').
+
+    Retourne :
+    - Un dictionnaire contenant les scores par fold, la moyenne des scores, et l’écart-type des scores.
+    """
+
+    # Effectuer la validation croisée
+    scores = cross_val_score(model, x, y, cv=k, scoring=scoring)
+
+    # Calculer les résultats
+    cross_validation_results = {
+        "scores": scores,
+        "mean_score": np.mean(scores),
+        "std_dev": np.std(scores)
+    }
+
+    # Afficher les résultats
+    print("Scores de chaque fold :", cross_validation_results["scores"])
+    print("Précision moyenne :", cross_validation_results["mean_score"])
+    print("Écart-type des précisions :", cross_validation_results["std_dev"])
+
+    return cross_validation_results
 
 
 def train_model(x_for_train, y_for_train):
@@ -78,10 +129,8 @@ def train_model(x_for_train, y_for_train):
     """
     std_scaler = StandardScaler()
     x_for_train = std_scaler.fit_transform(x_for_train)
-    # logistic_reg = LogisticRegression(solver=Config.SOLVER,
-    #                                   max_iter=Config.MAX_ITERATIONS,
-    #                                   verbose=1)
     model = RandomForestClassifier(verbose=1)
+    cross_validate_model(model, x_for_train, y_for_train)
     model.fit(x_for_train, y_for_train)
     return model, std_scaler
 
@@ -268,14 +317,60 @@ def evaluate_model(y_for_test, y_predict_test, y_predict_prob_test, model, avera
 
     print_classification_metrics(y_for_test, y_predict_test, model, average)
 
+def save_model(model, scaler):
+    """
+    Saves the trained model and scaler to a specified directory.
 
-# Main script
-csv_file_path = Config.DIRECTORY_PATH + Config.CLEANED_CSV_NAME
-df_prediction = load_data(csv_file_path, Config.COLS_100G, Config.CHUNK_SIZE)
-x, y = preprocess_data(df_prediction, Config.COL_PREDICTION)
+    Parameters:
+    model (sklearn.ensemble.RandomForestClassifier): The trained Random Forest model to be saved.
+    scaler (sklearn.preprocessing.StandardScaler): The scaler used to standardize the input data.
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+    Returns:
+    None: This function does not return any value. It saves the model and scaler to the specified directory.
 
-model, scaler = train_model(x_train, y_train)
-y_prediction_test, y_prediction_prob_test = make_predictions(model, scaler, x_test)
-evaluate_model(y_test, y_prediction_test, y_prediction_prob_test, model)
+    The function creates the 'models' directory if it does not already exist.
+    Then, it saves the trained model and scaler to the 'models' directory using joblib's dump function.
+    Finally, it prints a success message indicating that the model and scaler have been saved.
+    """
+    # Créer le répertoire s'il n'existe pas
+    os.makedirs('models', exist_ok=True)
+    # Ensuite, sauvegarder le modèle et le scaler dans ce répertoire
+    joblib.dump(model, 'models/model_nutriscore.pkl')
+    joblib.dump(scaler, 'models/scaler_nutriscore.pkl')
+    print("Modèle et scaler sauvegardés avec succès.")
+
+def prepare_and_train_model(saving):
+    """
+    Prepares and trains a machine learning model for predicting NutriScore.
+
+    Parameters:
+    saving (bool): A flag indicating whether to save the trained model and scaler.
+                    If True, the model and scaler will be saved to the 'models' directory.
+
+    Returns:
+    tuple: A tuple containing the trained model, the scaler used for standardizing the input data,
+           the features for the test set, and the target values for the test set.
+           The model is an instance of the RandomForestClassifier class from the sklearn.ensemble module.
+           The scaler is an instance of the StandardScaler class from the sklearn.preprocessing module.
+           The features and target values for the test set are obtained using the train_test_split function
+           from the sklearn.model_selection module.
+
+    The function loads a cleaned CSV file containing data for predicting NutriScore.
+    It then preprocesses the data by splitting it into features and target variables.
+    The data is split into training and test sets using the train_test_split function.
+    The function trains a Random Forest model using the training data.
+    If the 'saving' parameter is True, the trained model and scaler are saved to the 'models' directory.
+    Finally, the function returns the trained model, scaler, and the features and target values for the test set.
+    """
+    csv_file_path = Config.DIRECTORY_PATH + Config.CLEANED_CSV_NAME
+    df_prediction = load_data(csv_file_path, Config.COLS_100G, Config.CHUNK_SIZE)
+    df_prediction = split_data_for_test(df_prediction,test_size=0.1)
+    x, y = preprocess_data(df_prediction, Config.COL_PREDICTION)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+    model, scaler = train_model(x_train, y_train)
+    if saving:
+        save_model(model, scaler)
+    return model, scaler, x_test, y_test
+
+
+
