@@ -161,12 +161,6 @@ def display_model_evaluations(y_for_test, y_predict_test, y_predict_prob_test, m
     None: This function does not return any value. It only performs evaluations and displays.
     """
     plot_probability_distribution(y_predict_prob_test)
-
-    # Calculate the AUC ROC for the entire dataset
-    roc_auc = roc_auc_score(y_for_test, y_predict_prob_test, multi_class='ovr')
-    print("ROC-AUC:", roc_auc)
-
     plot_roc_curve(y_for_test, y_predict_prob_test)
     plot_training_confusion_matrix(y_for_test, y_predict_test, model)
-
     print_classification_metrics(y_for_test, y_predict_test, model, average)
