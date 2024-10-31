@@ -34,10 +34,10 @@ def train_model(df, label_encoder_pnns, ordinal_encoder_grade):
     y = df['nutriscore_grade'].ravel()  # Convert target to 1D array
 
     # Print detailed information about the training DataFrame columns
-    print("\033[94mTraining DataFrame Info:\033[0m")
-    print(X.info())
+    print("\n\033[94mTraining DataFrame Info:\033[0m")
+    print(X.info(), "\n")
     print("\033[94mTraining DataFrame Head:\033[0m")
-    print(X.head())
+    print(X.head(), "\n")
 
     # Split the dataset into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -47,13 +47,16 @@ def train_model(df, label_encoder_pnns, ordinal_encoder_grade):
     X_train_scaled = scaler.fit_transform(X_train)
     X_test_scaled = scaler.transform(X_test)
 
+    # Print training AI model
+    print("\033[93mTraining AI model...\033[0m\n")
+
     # Train a model (RandomForestClassifier in this case)
-    model = RandomForestClassifier(random_state=42)
+    model = RandomForestClassifier(random_state=42, verbose=1)
     model.fit(X_train_scaled, y_train)
 
     # Evaluate the model
     y_pred = model.predict(X_test_scaled)
-    print("\033[94mModel Accuracy:\033[0m ", accuracy_score(y_test, y_pred))
+    print("\n\033[94mModel Accuracy:\033[0m\n", accuracy_score(y_test, y_pred), "\n")
     print("\033[94mClassification Report:\033[0m\n", classification_report(y_test, y_pred))
 
     # Save the model, encoders, and scaler in 'app/ai-model'

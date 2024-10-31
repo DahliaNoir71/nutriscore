@@ -19,7 +19,7 @@ def load_dataframe():
     Returns:
     pandas.DataFrame: A DataFrame containing the data from the CSV file.
     """
-    print("\n\033[94mLoad_dataframe\033[0m")
+    print("\n\033[93mLoading dataframe...\033[0m")
     products = None
     list_df = []
 
@@ -42,5 +42,8 @@ def load_dataframe():
         with current_app.app_context():
             current_app.config['loading_dataframe_status']['complete'] = False
             logging.error(f"Error in load_dataframe: {e}")
+    
+    # Saves dataframe in config
+    current_app.config['PRODUCTS_DF'] = products
 
     return products

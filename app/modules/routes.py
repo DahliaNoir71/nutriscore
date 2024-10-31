@@ -42,7 +42,6 @@ def index():
         db.session.add(new_product)
         db.session.commit()
 
-        flash(f'Nutri-Score for {form.product_name.data}: {predicted_score}', 'success')
         return redirect(url_for('main.index'))
     
     return render_template('index.html', form=form)
@@ -125,15 +124,15 @@ def predict():
             })
 
             # Debugging - Print Column Details
-            print("\033[94mColumn names in prediction DataFrame:\033[0m", input_df.columns.tolist())
-            print("\033[94mData types in prediction DataFrame:\033[0m", input_df.dtypes)
+            print("\n\033[94mColumn names in prediction DataFrame:\033[0m\n", input_df.columns.tolist(), "\n")
+            print("\033[94mData types in prediction DataFrame:\033[0m\n", input_df.dtypes, "\n")
 
             # Normalize the input data
             input_scaled = scaler.transform(input_df)
 
             # Print normalized data for confirmation
             print("\033[94mNormalized Input Data:\033[0m")
-            print(input_scaled)
+            print(input_scaled, "\n")
 
             # Predict the Nutri-Score
             prediction = model.predict(input_scaled)
@@ -141,10 +140,10 @@ def predict():
             predicted_score = nutriscore_grade
 
             # Print predicted score
-            print("\033[94mPredicted Nutri-Grade:\033[0m", predicted_score)
+            print("\033[94mPredicted Nutri-Grade:\033[0m", predicted_score, "\n")
         except Exception as e:
             # Print error in red
-            print(f"\033[91mError during prediction:\033[0m {e}")
+            print(f"\n\033[91mError during prediction:\033[0m {e}\n")
             predicted_score = "Error"
 
     return render_template('prediction_form.html', form=form, pnns_groups_list=pnns_groups_list, predicted_score=predicted_score)
