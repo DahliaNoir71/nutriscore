@@ -4,8 +4,10 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder, OrdinalEncoder
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import classification_report, accuracy_score, mean_absolute_error, confusion_matrix, ConfusionMatrixDisplay
 import joblib
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Adjust the path to access the config file from the root directory
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
@@ -57,7 +59,26 @@ def train_model(df, label_encoder_pnns, ordinal_encoder_grade):
     # Evaluate the model
     y_pred = model.predict(X_test_scaled)
     print("\n\033[94mModel Accuracy:\033[0m\n", accuracy_score(y_test, y_pred), "\n")
+    mae = mean_absolute_error(y_test, y_pred)
+    print("\033[94mMAE:\033[0m\n", mae, "\n")
     print("\033[94mClassification Report:\033[0m\n", classification_report(y_test, y_pred))
+
+    # Predict the training or test set labels
+    y_train_pred = model.predict(X_train_scaled)
+
+    # Generate the confusion matrix
+    cm = confusion_matrix(y_train, y_train_pred)
+
+    # Plot the confusion matrix with labels
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", cbar=False)
+    plt.xlabel("Predicted Labels")
+    plt.ylabel("True Labels")
+    plt.title("Confusion Matrix")
+    plt.show()
+
+    # Display the confusion matrix
+    print("\n\033[94mConfusion Matrix:\033[0m\n", cm, "\n")
 
     # Save the model, encoders, and scaler in 'app/ai-model'
     save_model_and_encoders(model, scaler, label_encoder_pnns, ordinal_encoder_grade)
@@ -72,6 +93,8 @@ def save_model_and_encoders(model, scaler, label_encoder_pnns, ordinal_encoder_g
     joblib.dump(scaler, os.path.join(save_dir, 'scaler.pkl'))
     joblib.dump(label_encoder_pnns, os.path.join(save_dir, 'label_encoder_pnns.pkl'))
     joblib.dump(ordinal_encoder_grade, os.path.join(save_dir, 'ordinal_encoder_grade.pkl'))
+
+    print(f"\033[93mModel and encoders saved to '{save_dir}'\033[0m\n")
 
 if __name__ == "__main__":
     # Load and preprocess the data
