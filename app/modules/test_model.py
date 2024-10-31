@@ -1,9 +1,5 @@
 import joblib
-import seaborn as sns
-import pandas as pd
-from matplotlib import pyplot as plt
 
-from app.modules.train_model import make_predictions
 
 def load_data_for_test(model_path, scaler_path, test_data_path):
     """
@@ -22,7 +18,7 @@ def load_data_for_test(model_path, scaler_path, test_data_path):
     df_test = joblib.load(test_data_path)
     return model, scaler, df_test
 
-def make_and_display_predictions(model, scaler, df_test):
+def make_predictions(model, scaler, df_test):
     """
     This function makes predictions on the test data using a trained model and scaler,
     and then displays the actual and predicted nutriscore grades side by side.
@@ -36,11 +32,8 @@ def make_and_display_predictions(model, scaler, df_test):
     pandas.DataFrame: The input DataFrame with an additional 'nutriscore_prediction' column containing the predicted grades.
     """
     df_test_scaled = df_test.drop(columns=['nutriscore_grade'])
-    y_prediction_test, y_prediction_prob_test = make_predictions(model, scaler, df_test_scaled)
+    y_prediction_test, y_prediction_prob_test = make_test_predictions(model, scaler, df_test_scaled)
     df_test['nutriscore_prediction'] = y_prediction_test
-    pd.set_option('display.max_rows', None)
-    print(df_test[['nutriscore_grade', 'nutriscore_prediction']])
-    pd.reset_option('display.max_rows')
 
     return df_test
 
@@ -84,70 +77,3 @@ def get_accuracy_report(correct_predictions, total_predictions, accuracy_percent
     report += f"Nombre total de prédictions : {total_predictions}\n"
     report += f"Pourcentage de bonnes prédictions : {accuracy_percentage:.2f}%"
     return report
-
-
-def plot_nutriscore_heatmap(df_test, accuracy_report):
-    """
-    Plot a heatmap to visualize the comparison between actual and predicted nutriscore grades.
-
-    Parameters:
-    df_test (pandas.DataFrame): A DataFrame containing 'nutriscore_grade' and 'nutriscore_prediction'.
-
-    Returns:
-    None
-    """
-    # Créer une matrice de confusion
-    confusion_matrix = pd.crosstab(df_test['nutriscore_grade'],
-                                   df_test['nutriscore_prediction'],
-                                   rownames=['Nutriscore Réel'],
-                                   colnames=['Nutriscore Prédit'])
-
-    # Créer une nouvelle figure
-    fig, ax = plt.subplots(figsize=(10, 8))
-
-    # Tracer la heatmap
-    sns.heatmap(confusion_matrix,
-                annot=True,
-                fmt='.2f',
-                cmap='Blues',
-                cbar=True,
-                square=True,
-                ax=ax)
-
-    # Ajouter des titres et des étiquettes
-    plt.title('Matrice de Confusion pour Nutriscore')
-    plt.xlabel('Nutriscore Prédit')
-    plt.ylabel('Nutriscore Réel')
-
-    # Ajouter du texte en dessous de la heatmap
-    # Utiliser les dimensions de la figure pour centrer le texte
-    plt.text(0.5,
-             -0.1,
-             accuracy_report,
-             ha='center',
-             va='top',
-             transform=ax.transAxes)
-
-    # Ajuster l'espace en bas pour éviter le chevauchement
-    plt.subplots_adjust(bottom=0.2)
-
-    plt.show()
-
-
-def main():
-    """
-    Main function to load data, make predictions, calculate accuracy, and display the report.
-    """
-    model_path = 'models/model_nutriscore.pkl'
-    scaler_path = 'models/scaler_nutriscore.pkl'
-    test_data_path = 'tests/df_test_nutriscore.pkl'
-
-    model, scaler, df_test = load_data_for_test(model_path, scaler_path, test_data_path)
-    df_test = make_and_display_predictions(model, scaler, df_test)
-    correct_predictions, total_predictions, accuracy_percentage = calculate_accuracy(df_test)
-    report = get_accuracy_report(correct_predictions, total_predictions, accuracy_percentage)
-    plot_nutriscore_heatmap(df_test, report)
-
-# Call the main function
-if __name__ == "__main__":
-    main()

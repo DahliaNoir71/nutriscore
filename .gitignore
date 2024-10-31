@@ -11,3 +11,4 @@ __pycache__
 # Environments
 .venv
 /app/static/nutriscore.db
+/app/scripts/models/
