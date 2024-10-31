@@ -6,6 +6,7 @@
     <div class="container">
         <h1 class="text-center mb-4">Nutriscore AI Prediction Form</h1>
         <form method="POST" action="{{ url_for('main.predict') }}">
+            {{ form.hidden_tag() }}
             <div class="row justify-content-center">
                 <!-- Left Column: Product Information -->
                 <div class="col-md-5">
@@ -18,23 +19,12 @@
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="quantity">Quantity</label>
-                            <input type="text" id="quantity" name="quantity" class="form-control">
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="brands">Brands</label>
-                            <input type="text" id="brands" name="brands" class="form-control">
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="categories">Categories</label>
-                            <input type="text" id="categories" name="categories" class="form-control">
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="ingredients_text">Ingredients</label>
-                            <textarea id="ingredients_text" name="ingredients_text" class="form-control"></textarea>
+                            <label for="pnns_groups_1">Main Food Group (pnns_groups_1)</label>
+                            <select id="pnns_groups_1" name="pnns_groups_1" class="form-control" required>
+                                {% for group in pnns_groups_list %}
+                                    <option value="{{ group }}">{{ group }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -43,26 +33,41 @@
                 <div class="col-md-5">
                     <div class="section" style="margin-bottom: 50px;">
                         <h2 style="margin-bottom: 20px;">Nutritional Content</h2>
-                        <div class="row">
-                            <!-- Left half of Nutritional Content -->
-                            <div class="col-md-6">
-                                {% for field in ['energy-kj_100g', 'energy-kcal_100g', 'fat_100g', 'saturated-fat_100g', 'omega-3-fat_100g', 'omega-6-fat_100g'] %}
-                                    <div class="form-group mb-3">
-                                        <label for="{{ field }}">{{ field.replace('-', ' ').capitalize() }}</label>
-                                        <input type="number" id="{{ field }}" name="{{ field }}" class="form-control" step="0.01">
-                                    </div>
-                                {% endfor %}
-                            </div>
-
-                            <!-- Right half of Nutritional Content -->
-                            <div class="col-md-6">
-                                {% for field in ['sugars_100g', 'added-sugars_100g', 'fiber_100g', 'proteins_100g', 'salt_100g'] %}
-                                    <div class="form-group mb-3">
-                                        <label for="{{ field }}">{{ field.replace('-', ' ').capitalize() }}</label>
-                                        <input type="number" id="{{ field }}" name="{{ field }}" class="form-control" step="0.01">
-                                    </div>
-                                {% endfor %}
-                            </div>
+                        <div class="form-group mb-3">
+                            <label for="energy_kcal_100g">Energy (kcal per 100g)</label>
+                            <input type="number" id="energy_kcal_100g" name="energy_kcal_100g" class="form-control" step="0.01" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="fat_100g">Fat (g per 100g)</label>
+                            <input type="number" id="fat_100g" name="fat_100g" class="form-control" step="0.01" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="saturated_fat_100g">Saturated Fat (g per 100g)</label>
+                            <input type="number" id="saturated_fat_100g" name="saturated_fat_100g" class="form-control" step="0.01" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="sugars_100g">Sugars (g per 100g)</label>
+                            <input type="number" id="sugars_100g" name="sugars_100g" class="form-control" step="0.01" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="proteins_100g">Proteins (g per 100g)</label>
+                            <input type="number" id="proteins_100g" name="proteins_100g" class="form-control" step="0.01" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="sodium_100g">Sodium (g per 100g)</label>
+                            <input type="number" id="sodium_100g" name="sodium_100g" class="form-control" step="0.01" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="salt_100g">Salt (g per 100g)</label>
+                            <input type="number" id="salt_100g" name="salt_100g" class="form-control" step="0.01" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="fiber_100g">Fiber (g per 100g)</label>
+                            <input type="number" id="fiber_100g" name="fiber_100g" class="form-control" step="0.01" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="fruits_vegetables_nuts_estimate_from_ingredients_100g">Fruits, Vegetables, Nuts Estimate (g per 100g)</label>
+                            <input type="number" id="fruits_vegetables_nuts_estimate_from_ingredients_100g" name="fruits_vegetables_nuts_estimate_from_ingredients_100g" class="form-control" step="0.01" required>
                         </div>
                     </div>
                 </div>
@@ -73,10 +78,17 @@
                 <button type="submit" style="background-color: #4CAF50; color: white; border: none; padding: 10px 20px; font-size: 16px; margin-top: 20px; cursor: pointer; border-radius: 5px;">Predict</button>
             </div>
         </form>
+
+        {% if predicted_score %}
+            <div class="result-section mt-4 text-center">
+                <h2>Predicted Nutri-Score: <span class="predicted-score">{{ predicted_score }}</span></h2>
+            </div>
+        {% endif %}
+
     </div>
 
     <style>
-        .container{
+        .container {
             padding-top: 40px;
         }
     </style>
