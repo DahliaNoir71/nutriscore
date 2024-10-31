@@ -11,8 +11,8 @@ import seaborn as sns
 
 # Adjust the path to access the config file from the root directory
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
-from config import Config
 
+from config import Config
 from app.modules.clean_csv import read_csv_chunks
 
 def load_and_preprocess_data():
